@@ -25,10 +25,20 @@ public class UserService {
 
     public UserDTO findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent()) {
-            throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
+        if (userOptional.isPresent()) {
+            return new UserDTO(userOptional.get());
+        } else {
+            return null;
         }
-        return new UserDTO(userOptional.get());
+    }
+
+    public UserDTO findByNickname(String nickname) {
+        Optional<User> userOptional = userRepository.findByNickname(nickname);
+        if (userOptional.isPresent()) {
+            return new UserDTO(userOptional.get());
+        } else {
+            return null;
+        }
     }
 
 }

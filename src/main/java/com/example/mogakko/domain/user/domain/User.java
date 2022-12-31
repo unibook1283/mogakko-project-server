@@ -33,7 +33,7 @@ public class User {
 
     private String picture;
 
-    private boolean admin;
+    private Boolean admin;
 
 
 }

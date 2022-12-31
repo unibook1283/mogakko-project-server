@@ -17,6 +17,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("interceptor worked");
         String token = request.getHeader("accessToken"); // client에서 요청할 때 header에 넣어둔 "jwt-auth-token"이라는 키 값을 확인
         if (token != null && jwtService.validateToken(token)) {
             return true;

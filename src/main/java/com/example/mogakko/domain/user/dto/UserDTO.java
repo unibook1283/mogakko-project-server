@@ -31,7 +31,7 @@ public class UserDTO {
 
     private String picture;
 
-    private boolean admin;
+    private Boolean admin;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -42,6 +42,6 @@ public class UserDTO {
         this.phoneNumber = user.getPhoneNumber();
         this.githubAddress = user.getGithubAddress();
         this.picture = user.getPicture();
-        this.admin = user.isAdmin();
+        this.admin = user.getAdmin();
     }
 }
