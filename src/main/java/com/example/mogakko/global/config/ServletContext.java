@@ -24,7 +24,7 @@ public class ServletContext implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("jwt-auth-token");
+                .exposedHeaders("accessToken");
     }
 
     @Override

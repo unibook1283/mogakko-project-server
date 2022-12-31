@@ -1,7 +1,7 @@
 package com.example.mogakko.domain.user.service;
 
 import com.example.mogakko.domain.user.domain.User;
-import com.example.mogakko.domain.user.dto.UserAuthDTO;
+import com.example.mogakko.domain.user.dto.UserJoinRequestDTO;
 import com.example.mogakko.domain.user.dto.UserDTO;
 import com.example.mogakko.domain.user.dto.UserJoinResponseDTO;
 import com.example.mogakko.domain.user.repository.UserRepository;
@@ -18,7 +18,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public UserJoinResponseDTO join(UserAuthDTO userAuthDTO) {
+    public UserJoinResponseDTO join(UserJoinRequestDTO userAuthDTO) {
         User user = userRepository.save(userAuthDTO.toEntity());
         return new UserJoinResponseDTO(user.getId(), user.getUsername(), user.getPassword());
     }

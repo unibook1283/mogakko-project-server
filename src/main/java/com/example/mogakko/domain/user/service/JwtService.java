@@ -1,10 +1,9 @@
 package com.example.mogakko.domain.user.service;
 
 import com.example.mogakko.domain.user.dto.UserDTO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.example.mogakko.domain.user.exception.UnauthorizedException;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +12,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @Component
 public class JwtService {
 
@@ -58,5 +58,21 @@ public class JwtService {
     // interceptor에서 토큰 유효성을 검증하기 위한 메서드
     public void checkValid(String token) {
         Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(token);
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("Invalid JWT Token", e);
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT Token", e);
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT Token", e);
+        } catch (IllegalArgumentException e) {
+            log.info("JWT claims string is empty.", e);
+        }
+        return false;
     }
 }

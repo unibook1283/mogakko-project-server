@@ -1,16 +1,14 @@
 package com.example.mogakko.domain.user.controller;
 
-import com.example.mogakko.domain.user.domain.User;
-import com.example.mogakko.domain.user.dto.JwtTokenDTO;
-import com.example.mogakko.domain.user.dto.UserAuthDTO;
-import com.example.mogakko.domain.user.dto.UserDTO;
-import com.example.mogakko.domain.user.dto.UserJoinResponseDTO;
+import com.example.mogakko.domain.user.dto.*;
 import com.example.mogakko.domain.user.service.JwtService;
 import com.example.mogakko.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +18,12 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public UserJoinResponseDTO create(@RequestBody UserAuthDTO userAuthDTO) {
+    public UserJoinResponseDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
         return userService.join(userAuthDTO);
     }
 
     @PostMapping("/login") // 로그인, 토큰이 필요하지 않는 경로
-    public JwtTokenDTO login(@RequestBody UserAuthDTO userAuthDTO) {
+    public JwtTokenDTO login(@RequestBody @Valid UserLoginRequestDTO userAuthDTO) {
         UserDTO dbUser = userService.findByUsername(userAuthDTO.getUsername());
 
         if(dbUser.getPassword().equals(userAuthDTO.getPassword())) { // 유효한 사용자일 경우
