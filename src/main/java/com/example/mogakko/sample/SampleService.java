@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +25,7 @@ public class SampleService {
     }
 
     public Sample findOne(Long sampleId) {
-        return sampleRepository.findOne(sampleId);
+        Optional<Sample> sample = sampleRepository.findById(sampleId);
+        return sample.orElse(null);
     }
 }

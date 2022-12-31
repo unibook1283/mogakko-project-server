@@ -36,5 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### db 정보
+### db info
 **/application-db.properties
+**/application-jwt.properties
