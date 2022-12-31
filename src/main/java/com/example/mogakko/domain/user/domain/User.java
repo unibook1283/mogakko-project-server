@@ -4,11 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -18,6 +17,15 @@ public class User {
     @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserLanguage> languages = new ArrayList<UserLanguage>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserLocation> locations = new ArrayList<UserLocation>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserOccupation> occupations = new ArrayList<UserOccupation>();
 
     private String username;
 
