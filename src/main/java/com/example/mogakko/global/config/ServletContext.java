@@ -31,7 +31,7 @@ public class ServletContext implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) { // 인터셉터 등록
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**") // Interceptor가 적용될 경로
-                .excludePathPatterns("/users/login", "/users/register", "/users/username-redundancy", "/languages", "/locations");
+                .excludePathPatterns("/users/login", "/users/register", "/users/username-redundancy", "/languages", "/locations", "/occupations");
     }
 
 }
