@@ -17,8 +17,8 @@ public class OccupationService {
     OccupationRepository occupationRepository;
 
     public Long saveOccupation(OccupationDTO occupationDTO) {
-        occupationRepository.save(occupationDTO.toEntity());
-        return occupationDTO.getId();
+        Occupation occupation = occupationRepository.save(occupationDTO.toEntity());
+        return occupation.getId();
     }
 
     public OccupationDTO findOne(Long occupationId) {

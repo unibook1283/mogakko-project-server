@@ -17,8 +17,8 @@ public class LocationService {
     LocationRepository locationRepository;
 
     public Long saveLocation(LocationDTO locationDTO) {
-        locationRepository.save(locationDTO.toEntity());
-        return locationDTO.getId();
+        Location location = locationRepository.save(locationDTO.toEntity());
+        return location.getId();
     }
 
     public LocationDTO findOne(Long locationId) {

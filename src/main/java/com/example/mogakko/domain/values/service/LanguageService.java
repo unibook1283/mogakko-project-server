@@ -18,8 +18,8 @@ public class LanguageService {
     LanguageRepository languageRepository;
 
     public Long saveLanguage(LanguageDTO languageDTO) {
-        languageRepository.save(languageDTO.toEntity());
-        return languageDTO.getId();
+        Language language = languageRepository.save(languageDTO.toEntity());
+        return language.getId();
     }
 
     public LanguageDTO findOne(Long languageId) {
