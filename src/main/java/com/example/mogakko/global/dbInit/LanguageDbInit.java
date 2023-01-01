@@ -14,7 +14,7 @@ public class LanguageDbInit {
 
     private final LanguageService languageService;
 
-    @PostConstruct
+//    @PostConstruct
     private void insertLanguagesIntoDb() {
         List<String> languages = List.of(
                 // 프론트엔드

@@ -23,7 +23,7 @@ public class LocationDbInit {
     private String seoulApiKey;
     private final LocationService locationService;
 
-    @PostConstruct
+//    @PostConstruct
     private void insertSubwayStationsIntoDb() {
         int cnt = 767;  // 나중에 api에 지하철역이 추가/삭제되면 고쳐줘야됨.
         try {
