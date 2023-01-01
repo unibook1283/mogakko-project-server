@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,5 +30,12 @@ public class LocationService {
         } else {
             return null;
         }
+    }
+
+    public List<LocationDTO> findAll() {
+        List<Location> locations = locationRepository.findAll();
+        return locations.stream()
+                .map(location -> new LocationDTO(location))
+                .collect(Collectors.toList());
     }
 }
