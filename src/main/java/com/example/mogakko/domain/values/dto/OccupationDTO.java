@@ -10,18 +10,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OccupationDTO {
 
-    private Long id;
-    private String name;
+    private Long occupationId;
+    private String occupationName;
 
     public OccupationDTO(Occupation occupation) {
-        this.id = occupation.getId();
-        this.name = occupation.getName();
+        this.occupationId = occupation.getId();
+        this.occupationName = occupation.getName();
     }
 
     public Occupation toEntity() {
         Occupation occupation = new Occupation();
-        occupation.setId(id);
-        occupation.setName(name);
+        occupation.setId(occupationId);
+        occupation.setName(occupationName);
         return occupation;
     }
 }

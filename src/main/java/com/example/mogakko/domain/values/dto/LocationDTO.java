@@ -10,19 +10,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LocationDTO {
 
-    private Long id;
+    private Long locationId;
     private String stationName;
     private String lineNumber;
 
     public LocationDTO(Location location) {
-        this.id = location.getId();
+        this.locationId = location.getId();
         this.stationName = location.getStationName();
         this.lineNumber = location.getLineNumber();
     }
 
     public Location toEntity() {
         Location location = new Location();
-        location.setId(id);
+        location.setId(locationId);
         location.setStationName(stationName);
         location.setLineNumber(lineNumber);
         return location;

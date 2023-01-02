@@ -31,7 +31,7 @@ public class OccupationDbInit {
         occupations.stream()
                 .forEach(occupation -> {
                     OccupationDTO occupationDTO = new OccupationDTO();
-                    occupationDTO.setName(occupation);
+                    occupationDTO.setOccupationName(occupation);
                     occupationService.saveOccupation(occupationDTO);
                 });
     }

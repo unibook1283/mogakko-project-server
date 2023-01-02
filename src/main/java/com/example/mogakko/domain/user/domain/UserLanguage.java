@@ -26,4 +26,10 @@ public class UserLanguage {
     @JoinColumn(name = "language_id")
     private Language language;
 
+    //==연관관계 메서드==//
+    public void setUser(User user) {
+        this.user = user;
+        user.getLanguages().add(this);
+    }
+
 }

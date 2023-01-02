@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface UserLocationRepository extends JpaRepository<UserLocation, Long> {
     List<UserLocation> findByUser(User user);
+    void deleteAllByUser(User user);
+
 }

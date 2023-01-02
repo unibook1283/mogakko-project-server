@@ -26,4 +26,10 @@ public class UserLocation {
     @JoinColumn(name = "location_id")
     private Location location;
 
+    //==연관관계 메서드==//
+    public void setUser(User user) {
+        this.user = user;
+        user.getLocations().add(this);
+    }
+
 }

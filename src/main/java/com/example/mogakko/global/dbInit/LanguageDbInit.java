@@ -5,7 +5,6 @@ import com.example.mogakko.domain.values.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
@@ -62,7 +61,7 @@ public class LanguageDbInit {
         languages.stream()
                 .forEach(language -> {
                     LanguageDTO languageDTO = new LanguageDTO();
-                    languageDTO.setName(language);
+                    languageDTO.setLanguageName(language);
                     languageService.saveLanguage(languageDTO);
                 });
     }

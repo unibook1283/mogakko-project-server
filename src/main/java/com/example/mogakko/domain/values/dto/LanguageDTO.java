@@ -10,18 +10,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LanguageDTO {
 
-    private Long id;
-    private String name;
+    private Long languageId;
+    private String languageName;
 
     public LanguageDTO(Language language) {
-        this.id = language.getId();
-        this.name = language.getName();
+        this.languageId = language.getId();
+        this.languageName = language.getName();
     }
 
     public Language toEntity() {
         Language language = new Language();
-        language.setId(id);
-        language.setName(name);
+        language.setId(languageId);
+        language.setName(languageName);
         return language;
     }
 

@@ -3,12 +3,12 @@ package com.example.mogakko.domain.user.controller;
 import com.example.mogakko.domain.user.dto.*;
 import com.example.mogakko.domain.user.service.JwtService;
 import com.example.mogakko.domain.user.service.UserService;
+import com.example.mogakko.domain.values.dto.LanguageDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,6 +58,12 @@ public class UserController {
         else redundancyDTO.setIsExist(true);
 
         return redundancyDTO;
+    }
+
+    @PostMapping("/users/{userId}")
+    public ProfileResponseDTO saveUserProfile(@PathVariable Long userId, @RequestBody ProfileRequestDTO profileRequestDTO) {
+
+        return userService.saveUserProfile(userId, profileRequestDTO);
     }
 
 }

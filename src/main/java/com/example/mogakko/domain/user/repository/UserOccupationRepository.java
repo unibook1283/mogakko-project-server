@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface UserOccupationRepository extends JpaRepository<UserOccupation, Long> {
     List<UserOccupation> findByUser(User user);
+    void deleteAllByUser(User user);
+
 }
