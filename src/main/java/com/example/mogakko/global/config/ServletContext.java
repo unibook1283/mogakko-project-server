@@ -34,10 +34,7 @@ public class ServletContext implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/users/login",
                         "/users/register",
-                        "/users/username-redundancy",
-                        "/languages",
-                        "/locations",
-                        "/occupations"
+                        "/users/username-redundancy"
                 );
     }
 

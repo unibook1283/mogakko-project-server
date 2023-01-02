@@ -43,6 +43,12 @@ public class UserService {
         return new UserJoinResponseDTO(user.getId(), user.getUsername(), user.getPassword());
     }
 
+    public ProfileResponseDTO getProfileByUserId(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        return new ProfileResponseDTO(user);
+    }
+
     public UserDTO findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
@@ -72,7 +78,7 @@ public class UserService {
         user.setPicture(profileRequestDTO.getPicture());
 
         // 지금은 user의 userLanguage, userLocation, userOccupation을 모두 지웠다가 요청받은 profileDTO에 있는걸로 다시 저장하는 방식.
-        // 성능이 몹시 별로임.
+        // 성능이 몹시 별로임. 코드도 지저분.
         // 그렇다고 controller에서 여러 service를 호출하면, transaction이 제각각 걸린다는 문제.
         // 더 좋은 방식을 고민해보자. 변경된 것만 update하는 dynamicUpdate?
         // userLanguageService의 prefer을 사용하지 않은건 service간의 의존을 없애기 위함.
@@ -132,5 +138,7 @@ public class UserService {
 
         return new ProfileResponseDTO(user);
     }
+
+
 
 }

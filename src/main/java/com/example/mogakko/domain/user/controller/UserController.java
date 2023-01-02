@@ -66,4 +66,9 @@ public class UserController {
         return userService.saveUserProfile(userId, profileRequestDTO);
     }
 
+    @GetMapping("/users/{userId}")
+    public ProfileResponseDTO getUser(@PathVariable Long userId) {
+        return userService.getProfileByUserId(userId);
+    }
+
 }
