@@ -18,8 +18,13 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping("/users/register")
-    public UserJoinResponseDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
-        return userService.join(userAuthDTO);
+    public JwtTokenDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
+        UserJoinResponseDTO userJoinResponseDTO = userService.join(userAuthDTO);
+
+        String accessToken = jwtService.createToken(userJoinResponseDTO.getUserId());
+        String refreshToken = jwtService.createRefreshToken();
+
+        return new JwtTokenDTO(userJoinResponseDTO.getUserId(), accessToken, refreshToken);
     }
 
     @PostMapping("/users/login") // 로그인, 토큰이 필요하지 않는 경로
@@ -27,6 +32,9 @@ public class UserController {
         UserDTO dbUser = userService.findByUsername(userAuthDTO.getUsername());
         if (dbUser == null) throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
 
+        /**
+         * 리팩토링. service로 빼야할 듯.
+         */
         if (dbUser.getPassword().equals(userAuthDTO.getPassword())) { // 유효한 사용자일 경우
             String accessToken = jwtService.createToken(dbUser.getId());    // 사용자 정보로 accessToken 생성
             String refreshToken = jwtService.createRefreshToken();  // refreshToken 생성
@@ -67,7 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}")
-    public ProfileResponseDTO getUser(@PathVariable Long userId) {
+    public ProfileResponseDTO getUserProfile(@PathVariable Long userId) {
         return userService.getProfileByUserId(userId);
     }
 
