@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,6 +32,15 @@ public class PostLanguage {
     public void setPost(Post post) {
         this.post = post;
         post.getLanguages().add(this);
+    }
+
+    //==생성 메서드==//
+    public static PostLanguage createPostLanguage(Post post, Language language) {
+        PostLanguage postLanguage = new PostLanguage();
+        postLanguage.setPost(post);
+        postLanguage.setLanguage(language);
+
+        return postLanguage;
     }
 
 }

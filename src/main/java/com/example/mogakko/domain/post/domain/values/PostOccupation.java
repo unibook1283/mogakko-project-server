@@ -2,6 +2,7 @@ package com.example.mogakko.domain.post.domain.values;
 
 import com.example.mogakko.domain.post.domain.Post;
 import com.example.mogakko.domain.values.domain.Occupation;
+import com.example.mogakko.domain.values.domain.Occupation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,4 +34,13 @@ public class PostOccupation {
         post.getOccupations().add(this);
     }
 
+    //==생성 메서드==//
+    public static PostOccupation createPostOccupation(Post post, Occupation occupation) {
+        PostOccupation postOccupation = new PostOccupation();
+        postOccupation.setPost(post);
+        postOccupation.setOccupation(occupation);
+
+        return postOccupation;
+    }
+    
 }

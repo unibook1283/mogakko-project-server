@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostOccupationRepository extends JpaRepository<PostOccupation, Long> {
     List<PostOccupation> findByPost(Post post);
+    void deleteAllByPost(Post post);
+
 }

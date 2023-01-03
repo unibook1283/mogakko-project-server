@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostLanguageRepository extends JpaRepository<PostLanguage, Long> {
     List<PostLanguage> findByPost(Post post);
+    void deleteAllByPost(Post post);
+
 }

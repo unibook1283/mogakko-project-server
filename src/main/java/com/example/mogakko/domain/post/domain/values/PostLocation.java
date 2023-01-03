@@ -2,6 +2,7 @@ package com.example.mogakko.domain.post.domain.values;
 
 import com.example.mogakko.domain.post.domain.Post;
 import com.example.mogakko.domain.values.domain.Location;
+import com.example.mogakko.domain.values.domain.Location;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,4 +34,13 @@ public class PostLocation {
         post.getLocations().add(this);
     }
 
+    //==생성 메서드==//
+    public static PostLocation createPostLocation(Post post, Location location) {
+        PostLocation postLocation = new PostLocation();
+        postLocation.setPost(post);
+        postLocation.setLocation(location);
+
+        return postLocation;
+    }
+    
 }

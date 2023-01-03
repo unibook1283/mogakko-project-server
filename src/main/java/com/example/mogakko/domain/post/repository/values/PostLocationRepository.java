@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostLocationRepository extends JpaRepository<PostLocation, Long> {
     List<PostLocation> findByPost(Post post);
+    void deleteAllByPost(Post post);
+
 }
