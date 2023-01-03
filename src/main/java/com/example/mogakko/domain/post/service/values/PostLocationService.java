@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,17 +31,18 @@ public class PostLocationService {
         postLocationRepository.deleteAllByPost(post);
     }
 
-    public void saveLocations(List<LocationDTO> locations, Long postId) {
+    public List<LocationDTO> saveLocations(List<LocationDTO> locations, Long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
-        locations.stream()
-                .forEach(locationDTO -> {
+        return locations.stream()
+                .map(locationDTO -> {
                     Optional<Location> optionalLocation = locationRepository.findById(locationDTO.getLocationId());
                     Location location = optionalLocation.orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
 
                     PostLocation postLocation = PostLocation.createPostLocation(post, location);
                     postLocationRepository.save(postLocation);
-                });
+                    return new LocationDTO(location);
+                }).collect(Collectors.toList());
     }
 }

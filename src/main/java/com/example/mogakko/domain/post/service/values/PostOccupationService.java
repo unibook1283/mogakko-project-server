@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,17 +31,18 @@ public class PostOccupationService {
         postOccupationRepository.deleteAllByPost(post);
     }
 
-    public void saveOccupations(List<OccupationDTO> occupations, Long postId) {
+    public List<OccupationDTO> saveOccupations(List<OccupationDTO> occupations, Long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
-        occupations.stream()
-                .forEach(occupationDTO -> {
+        return occupations.stream()
+                .map(occupationDTO -> {
                     Optional<Occupation> optionalOccupation = occupationRepository.findById(occupationDTO.getOccupationId());
                     Occupation occupation = optionalOccupation.orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
 
                     PostOccupation postOccupation = PostOccupation.createPostOccupation(post, occupation);
                     postOccupationRepository.save(postOccupation);
-                });
+                    return new OccupationDTO(occupation);
+                }).collect(Collectors.toList());
     }
 }
