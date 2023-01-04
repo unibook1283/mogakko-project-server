@@ -10,9 +10,7 @@ import com.example.mogakko.domain.values.dto.LanguageDTO;
 import com.example.mogakko.domain.values.dto.LocationDTO;
 import com.example.mogakko.domain.values.dto.OccupationDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +32,25 @@ public class PostController {
         postResponseDTO.setLanguages(languages);
         List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
         postResponseDTO.setLocations(locations);
+        List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
+        postResponseDTO.setOccupations(occupations);
+
+        return postResponseDTO;
+    }
+
+    @PostMapping("/posts/{postId}")
+    public PostResponseDTO updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO postRequestDTO) {
+        PostResponseDTO postResponseDTO = postService.updatePost(postId, postRequestDTO);
+
+        postLanguageService.resetPostLanguage(postId);
+        List<LanguageDTO> languages = postLanguageService.saveLanguages(postRequestDTO.getLanguages(), postId);
+        postResponseDTO.setLanguages(languages);
+
+        postLocationService.resetPostLocation(postId);
+        List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
+        postResponseDTO.setLocations(locations);
+
+        postOccupationService.resetPostOccupation(postId);
         List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
         postResponseDTO.setOccupations(occupations);
 
