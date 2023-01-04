@@ -11,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,6 +77,16 @@ public class PostService {
         PostResponseDTO postResponseDTO = new PostResponseDTO(post);
 
         return postResponseDTO;
+    }
+
+    public List<PostResponseDTO> findPostsByType(String type) {
+        if (!Arrays.stream(Type.values()).anyMatch(t -> t.name().equals(type))) {
+            throw new IllegalArgumentException("잘못된 postType");
+        }
+        List<Post> posts = postRepository.findByDtype(type);
+        return posts.stream()
+                .map(post -> new PostResponseDTO(post))
+                .collect(Collectors.toList());
     }
 
 }

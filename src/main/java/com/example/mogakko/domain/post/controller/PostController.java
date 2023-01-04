@@ -71,4 +71,9 @@ public class PostController {
         return userDTO.getPosts();
     }
 
+    @GetMapping("/posts/type/{postType}")
+    public List<PostResponseDTO> getPostOfType(@PathVariable String postType) {
+        return postService.findPostsByType(postType);
+    }
+
 }
