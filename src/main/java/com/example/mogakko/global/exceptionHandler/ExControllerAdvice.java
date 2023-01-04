@@ -23,7 +23,7 @@ public class ExControllerAdvice {
         return new ErrorResult("ILL-ARG", e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler
     public ErrorResult unauthorizedExHandler(UnauthorizedException e) {
         log.error("[exceptionHandler] ex", e);
