@@ -1,6 +1,6 @@
 package com.example.mogakko.domain.post.dto;
 
-import com.example.mogakko.domain.post.domain.Post;
+import com.example.mogakko.domain.post.domain.*;
 import com.example.mogakko.domain.post.domain.enums.Term;
 import com.example.mogakko.domain.post.domain.enums.Type;
 import com.example.mogakko.domain.user.domain.User;
@@ -11,11 +11,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -45,13 +48,43 @@ public class PostResponseDTO {
 
     private List<OccupationDTO> occupations;
 
-    public PostResponseDTO(PostRequestDTO postRequestDTO, Long postId, User user) {
-        this.postId = postId;
-        this.userId = user.getId();
-        this.type = postRequestDTO.getType();
-        this.title = postRequestDTO.getTitle();
-        this.content = postRequestDTO.getContent();
-        this.deadline = postRequestDTO.getDeadline();
-        this.term = postRequestDTO.getTerm();
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    public PostResponseDTO(Post post) {
+        this.setPostId(post.getId());
+        this.setUserId(post.getUser().getId());
+        this.setType(Type.valueOf(post.getDtype()));
+        this.setTitle(post.getTitle());
+        this.setContent(post.getContent());
+        switch (type) {
+            case PROJECT:
+                Project project = (Project) post;
+                this.setDeadline(project.getDeadline());
+                break;
+            case MOGAKKO:
+                Mogakko mogakko = (Mogakko) post;
+                this.setDeadline(mogakko.getDeadline());
+                this.setTerm(mogakko.getTerm());
+                break;
+            case QUESTION:
+                Question question = (Question) post;
+                break;
+            case STUDY:
+                Study study = (Study) post;
+                break;
+        }
+        this.languages = post.getLanguages()
+                .stream().map(l -> new LanguageDTO(l.getLanguage()))
+                .collect(Collectors.toList());
+        this.locations = post.getLocations()
+                .stream().map(l -> new LocationDTO(l.getLocation()))
+                .collect(Collectors.toList());
+        this.occupations = post.getOccupations()
+                .stream().map(o -> new OccupationDTO(o.getOccupation()))
+                .collect(Collectors.toList());
+        this.createdAt = post.getCreatedAt();
+        this.updatedAt = post.getUpdatedAt();
     }
 }

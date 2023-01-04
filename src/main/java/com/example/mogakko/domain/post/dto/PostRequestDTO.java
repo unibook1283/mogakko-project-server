@@ -41,6 +41,18 @@ public class PostRequestDTO {
 
     private List<OccupationDTO> occupations;
 
+    public PostRequestDTO(Post post) {
+        this.userId = userId;
+        this.title = title;
+        this.type = type;
+        this.content = content;
+        this.deadline = deadline;
+        this.term = term;
+        this.languages = languages;
+        this.locations = locations;
+        this.occupations = occupations;
+    }
+
     public Post toEntity(User user) {
         switch (type) {
             case PROJECT:

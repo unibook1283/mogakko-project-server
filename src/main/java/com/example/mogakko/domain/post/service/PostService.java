@@ -29,7 +29,7 @@ public class PostService {
         Post post = postRequestDTO.toEntity(user);
         Post savePost = postRepository.save(post);
 
-        return new PostResponseDTO(postRequestDTO, savePost.getId(), user);
+        return new PostResponseDTO(post);
     }
 
     public PostResponseDTO updatePost(Long postId, PostRequestDTO postRequestDTO) {
@@ -43,7 +43,7 @@ public class PostService {
         post.setContent(postRequestDTO.getContent());
         setSpecificInfo(postRequestDTO, post);
 
-        return new PostResponseDTO(postRequestDTO, postId, user);
+        return new PostResponseDTO(post);
     }
 
     private void setSpecificInfo(PostRequestDTO postRequestDTO, Post post) {
@@ -65,6 +65,15 @@ public class PostService {
                 Study study = (Study) post;
                 return;
         }
+    }
+
+    public PostResponseDTO findOne(Long postId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        Post post = postOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+
+        PostResponseDTO postResponseDTO = new PostResponseDTO(post);
+
+        return postResponseDTO;
     }
 
 }

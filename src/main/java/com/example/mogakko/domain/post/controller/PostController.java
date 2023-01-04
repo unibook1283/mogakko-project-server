@@ -57,4 +57,9 @@ public class PostController {
         return postResponseDTO;
     }
 
+    @GetMapping("/posts/{postId}")
+    public PostResponseDTO getPost(@PathVariable Long postId) {
+        return postService.findOne(postId);
+    }
+
 }
