@@ -6,6 +6,8 @@ import com.example.mogakko.domain.post.service.PostService;
 import com.example.mogakko.domain.post.service.values.PostLanguageService;
 import com.example.mogakko.domain.post.service.values.PostLocationService;
 import com.example.mogakko.domain.post.service.values.PostOccupationService;
+import com.example.mogakko.domain.user.dto.UserDTO;
+import com.example.mogakko.domain.user.service.UserService;
 import com.example.mogakko.domain.values.dto.LanguageDTO;
 import com.example.mogakko.domain.values.dto.LocationDTO;
 import com.example.mogakko.domain.values.dto.OccupationDTO;
@@ -22,6 +24,7 @@ public class PostController {
     private final PostLanguageService postLanguageService;
     private final PostLocationService postLocationService;
     private final PostOccupationService postOccupationService;
+    private final UserService userService;
 
     @PostMapping("/posts")
     public PostResponseDTO addPost(@RequestBody PostRequestDTO postRequestDTO) {
@@ -60,6 +63,12 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public PostResponseDTO getPost(@PathVariable Long postId) {
         return postService.findOne(postId);
+    }
+
+    @GetMapping("/users/{userId}/posts")
+    public List<PostResponseDTO> getPostOfUser(@PathVariable Long userId) {
+        UserDTO userDTO = userService.findOne(userId);
+        return userDTO.getPosts();
     }
 
 }

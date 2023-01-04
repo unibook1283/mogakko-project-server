@@ -49,6 +49,12 @@ public class UserService {
         return new ProfileResponseDTO(user);
     }
 
+    public UserDTO findOne(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        return new UserDTO(user);
+    }
+
     public UserDTO findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {

@@ -30,6 +30,8 @@ public class PostResponseDTO {
 
     private Long userId;
 
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     private Type type;
 
@@ -55,6 +57,7 @@ public class PostResponseDTO {
     public PostResponseDTO(Post post) {
         this.setPostId(post.getId());
         this.setUserId(post.getUser().getId());
+        this.setNickname(post.getUser().getNickname());
         this.setType(Type.valueOf(post.getDtype()));
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());
