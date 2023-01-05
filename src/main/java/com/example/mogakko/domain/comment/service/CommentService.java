@@ -38,6 +38,8 @@ public class CommentService {
             rootComment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 rootCommentId"));
             if (rootComment.getPost().getId() != post.getId())
                 throw new IllegalArgumentException("rootComment가 해당 post의 댓글이 아닙니다.");
+            if (rootComment.getRoot() != null)
+                throw new IllegalArgumentException("rootComment는 다른 rootComment를 갖지 않아야 합니다.");
         }
 
         Comment comment = commentRequestDTO.toEntity(post, user, rootComment);
