@@ -3,6 +3,7 @@ package com.example.mogakko.domain.comment.service;
 import com.example.mogakko.domain.comment.domain.Comment;
 import com.example.mogakko.domain.comment.dto.CommentRequestDTO;
 import com.example.mogakko.domain.comment.dto.CommentResponseDTO;
+import com.example.mogakko.domain.comment.dto.UpdateCommentDTO;
 import com.example.mogakko.domain.comment.repository.CommentRepository;
 import com.example.mogakko.domain.post.domain.Post;
 import com.example.mogakko.domain.post.repository.PostRepository;
@@ -63,5 +64,13 @@ public class CommentService {
         Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
         commentRepository.deleteAllByRoot(comment);
         commentRepository.deleteById(commentId);
+    }
+
+    public CommentResponseDTO updateComment(Long commentId, UpdateCommentDTO updateCommentDTO) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+
+        comment.setContent(updateCommentDTO.getContent());
+        return new CommentResponseDTO(comment);
     }
 }

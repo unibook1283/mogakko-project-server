@@ -2,6 +2,7 @@ package com.example.mogakko.domain.comment.controller;
 
 import com.example.mogakko.domain.comment.dto.CommentRequestDTO;
 import com.example.mogakko.domain.comment.dto.CommentResponseDTO;
+import com.example.mogakko.domain.comment.dto.UpdateCommentDTO;
 import com.example.mogakko.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,10 @@ public class CommentController {
     @DeleteMapping("/comments/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    public CommentResponseDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentDTO updateCommentDTO) {
+        return commentService.updateComment(commentId, updateCommentDTO);
     }
 }
