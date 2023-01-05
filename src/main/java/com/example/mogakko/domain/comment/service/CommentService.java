@@ -55,4 +55,11 @@ public class CommentService {
                 .map(comment -> new CommentResponseDTO(comment))
                 .collect(Collectors.toList());
     }
+
+    public void deleteComment(Long commentId) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+        commentRepository.deleteAllByRoot(comment);
+        commentRepository.deleteById(commentId);
+    }
 }
