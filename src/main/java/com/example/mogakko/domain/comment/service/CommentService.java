@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,4 +47,12 @@ public class CommentService {
         return new CommentResponseDTO(saveComment);
     }
 
+    public List<CommentResponseDTO> findCommentsByPost(Long postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+
+        return commentRepository.findByPost(post).stream()
+                .map(comment -> new CommentResponseDTO(comment))
+                .collect(Collectors.toList());
+    }
 }
