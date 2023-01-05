@@ -1,7 +1,7 @@
 package com.example.mogakko.domain.post.service;
 
 import com.example.mogakko.domain.post.domain.*;
-import com.example.mogakko.domain.post.domain.enums.Type;
+import com.example.mogakko.domain.post.enums.Type;
 import com.example.mogakko.domain.post.dto.PostRequestDTO;
 import com.example.mogakko.domain.post.dto.PostResponseDTO;
 import com.example.mogakko.domain.post.repository.PostRepository;

@@ -1,7 +1,6 @@
 package com.example.mogakko.domain.post.domain;
 
-import com.example.mogakko.domain.post.domain.enums.Term;
-import com.example.mogakko.domain.post.domain.enums.Type;
+import com.example.mogakko.domain.post.enums.Term;
 import lombok.Getter;
 import lombok.Setter;
 

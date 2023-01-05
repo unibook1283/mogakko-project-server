@@ -1,5 +1,6 @@
 package com.example.mogakko.domain.user.domain;
 
+import com.example.mogakko.domain.group.domain.GroupUser;
 import com.example.mogakko.domain.post.domain.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<Post>();
+
+    @OneToMany(mappedBy = "user")
+    private List<GroupUser> groupUsers = new ArrayList<GroupUser>();
 
     private String username;
 

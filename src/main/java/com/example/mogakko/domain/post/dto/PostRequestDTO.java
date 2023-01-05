@@ -1,13 +1,12 @@
 package com.example.mogakko.domain.post.dto;
 
 import com.example.mogakko.domain.post.domain.*;
-import com.example.mogakko.domain.post.domain.enums.Term;
-import com.example.mogakko.domain.post.domain.enums.Type;
+import com.example.mogakko.domain.post.enums.Term;
+import com.example.mogakko.domain.post.enums.Type;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.values.dto.LanguageDTO;
 import com.example.mogakko.domain.values.dto.LocationDTO;
 import com.example.mogakko.domain.values.dto.OccupationDTO;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.example.mogakko.domain.post.domain;
 
 import com.example.mogakko.domain.baseTime.BaseTimeEntity;
-import com.example.mogakko.domain.post.domain.enums.Type;
+import com.example.mogakko.domain.group.domain.Group;
 import com.example.mogakko.domain.post.domain.values.PostLanguage;
 import com.example.mogakko.domain.post.domain.values.PostLocation;
 import com.example.mogakko.domain.post.domain.values.PostOccupation;
@@ -33,6 +33,10 @@ public class Post extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group")
+    private Group group;
 
     private String title;
 
