@@ -2,9 +2,8 @@ package com.example.mogakko.domain.group.service;
 
 import com.example.mogakko.domain.group.domain.Group;
 import com.example.mogakko.domain.group.domain.GroupUser;
-import com.example.mogakko.domain.group.dto.GroupMemberDTO;
-import com.example.mogakko.domain.group.dto.MyGroupDTO;
-import com.example.mogakko.domain.group.dto.UserIdDTO;
+import com.example.mogakko.domain.group.dto.*;
+import com.example.mogakko.domain.group.enums.GroupStatus;
 import com.example.mogakko.domain.group.exception.IsNotGroupMasterException;
 import com.example.mogakko.domain.group.repository.GroupRepository;
 import com.example.mogakko.domain.group.repository.GroupUserRepository;
@@ -88,5 +87,21 @@ public class GroupService {
         }
 
         groupUserRepository.deleteByGroupAndUser(group, deleteUser);
+    }
+
+    public GroupStatusResponseDTO getGroupStatus(Long groupId) {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+
+        return new GroupStatusResponseDTO(group);
+    }
+
+    public GroupStatusResponseDTO setGroupStatus(Long groupId, GroupStatus groupStatus) {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+
+        group.setGroupStatus(groupStatus);
+
+        return new GroupStatusResponseDTO(group);
     }
 }
