@@ -4,6 +4,8 @@ import com.example.mogakko.domain.group.domain.Group;
 import com.example.mogakko.domain.group.domain.GroupUser;
 import com.example.mogakko.domain.group.dto.GroupMemberDTO;
 import com.example.mogakko.domain.group.dto.MyGroupDTO;
+import com.example.mogakko.domain.group.dto.UserIdDTO;
+import com.example.mogakko.domain.group.exception.IsNotGroupMasterException;
 import com.example.mogakko.domain.group.repository.GroupRepository;
 import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.post.domain.Mogakko;
@@ -51,7 +53,6 @@ public class GroupService {
                     myGroupDTO.setGroupStatus(group.getGroupStatus());
 
                     Optional<GroupUser> optionalMasterGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true);
-                    // 일단 get() 해놨는데, groupMaster가 회원탈퇴했으면?
                     GroupUser masterGroupUser = optionalMasterGroupUser.get();
                     myGroupDTO.setGroupMaster(masterGroupUser.getUser().getNickname());
 
@@ -69,4 +70,23 @@ public class GroupService {
 
     }
 
+    public void deleteGroupMember(Long groupId, Long memberId, UserIdDTO userIdDTO) {
+        Optional<User> deleteUserOptional = userRepository.findById(memberId);
+        User deleteUser = deleteUserOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+
+        Optional<User> callerOptional = userRepository.findById(userIdDTO.getUserId());
+        User caller = callerOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+
+        Optional<GroupUser> optionalGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true);
+        GroupUser masterGroupUser = optionalGroupUser.get();
+
+        if (caller.getId() != masterGroupUser.getUser().getId()) {
+            throw new IsNotGroupMasterException("그룹장만 실행할 수 있습니다.");
+        }
+
+        groupUserRepository.deleteByGroupAndUser(group, deleteUser);
+    }
 }

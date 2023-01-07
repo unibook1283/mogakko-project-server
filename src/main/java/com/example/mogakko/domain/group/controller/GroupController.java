@@ -2,11 +2,10 @@ package com.example.mogakko.domain.group.controller;
 
 import com.example.mogakko.domain.group.dto.GroupMemberDTO;
 import com.example.mogakko.domain.group.dto.MyGroupDTO;
+import com.example.mogakko.domain.group.dto.UserIdDTO;
 import com.example.mogakko.domain.group.service.GroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +23,10 @@ public class GroupController {
     @GetMapping("/members/{memberId}/groups")
     public List<MyGroupDTO> getGroupListOfUser(@PathVariable Long memberId) {
         return groupService.getGroupListOfUser(memberId);
+    }
+
+    @PostMapping("/groups/{groupId}/members/{memberId}")
+    public void releaseGroupMember(@PathVariable Long groupId, @PathVariable Long memberId, @RequestBody UserIdDTO userIdDTO) {
+        groupService.deleteGroupMember(groupId, memberId, userIdDTO);
     }
 }
