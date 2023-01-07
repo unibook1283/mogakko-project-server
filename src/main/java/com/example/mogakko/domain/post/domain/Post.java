@@ -57,4 +57,9 @@ public class Post extends BaseTimeEntity {
         user.getPosts().add(this);
     }
 
+    public void setGroup(Group group) {
+        this.group = group;
+        group.setPost(this);
+    }
+
 }

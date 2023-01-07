@@ -1,6 +1,7 @@
 package com.example.mogakko.domain.group.controller;
 
 import com.example.mogakko.domain.group.dto.GroupMemberDTO;
+import com.example.mogakko.domain.group.dto.MyGroupDTO;
 import com.example.mogakko.domain.group.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,5 +19,10 @@ public class GroupController {
     @GetMapping("/groups/{groupId}/members")
     public List<GroupMemberDTO> getGroupMembers(@PathVariable Long groupId) {
         return groupService.findGroupMembersByGroupId(groupId);
+    }
+
+    @GetMapping("/members/{memberId}/groups")
+    public List<MyGroupDTO> getGroupListOfUser(@PathVariable Long memberId) {
+        return groupService.getGroupListOfUser(memberId);
     }
 }

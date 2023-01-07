@@ -1,6 +1,7 @@
 package com.example.mogakko.domain.group.domain;
 
 import com.example.mogakko.domain.group.enums.GroupStatus;
+import com.example.mogakko.domain.post.domain.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,9 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     private List<GroupUser> groupUsers = new ArrayList<GroupUser>();
+
+    @OneToOne(mappedBy = "group")
+    private Post post;
 
     public void addGroupUser(GroupUser groupUser) {
         groupUsers.add(groupUser);
