@@ -22,10 +22,10 @@ public class PostRequestDTO {
 
     private Long userId;
 
-    private String title;
-
     @Enumerated(EnumType.STRING)
     private Type type;
+
+    private String title;
 
     private String content;
 
@@ -56,31 +56,32 @@ public class PostRequestDTO {
         switch (type) {
             case PROJECT:
                 Project project = new Project();
-                setCommonInfo(user, project);
+                setCommonInfo(user, project, type);
                 project.setDeadline(deadline);
                 return project;
             case MOGAKKO:
                 Mogakko mogakko = new Mogakko();
-                setCommonInfo(user, mogakko);
+                setCommonInfo(user, mogakko, type);
                 mogakko.setDeadline(deadline);
                 mogakko.setTerm(term);
                 return mogakko;
             case QUESTION:
                 Question question = new Question();
-                setCommonInfo(user, question);
+                setCommonInfo(user, question, type);
                 return question;
             case STUDY:
                 Study study = new Study();
-                setCommonInfo(user, study);
+                setCommonInfo(user, study, type);
                 return study;
         }
         throw new IllegalArgumentException("잘못된 type");
     }
 
-    private void setCommonInfo(User user, Post post) {
+    private void setCommonInfo(User user, Post post, Type type) {
         post.setUser(user);
         post.setTitle(title);
         post.setContent(content);
+        post.setDtype(type.name());
     }
 
 }

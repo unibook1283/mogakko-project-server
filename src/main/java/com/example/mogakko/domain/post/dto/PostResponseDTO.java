@@ -1,5 +1,6 @@
 package com.example.mogakko.domain.post.dto;
 
+import com.example.mogakko.domain.group.enums.GroupStatus;
 import com.example.mogakko.domain.post.domain.*;
 import com.example.mogakko.domain.post.enums.Term;
 import com.example.mogakko.domain.post.enums.Type;
@@ -50,6 +51,10 @@ public class PostResponseDTO {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private Long groupId;
+
+    private GroupStatus groupStatus;
 
     public PostResponseDTO(Post post) {
         this.setPostId(post.getId());

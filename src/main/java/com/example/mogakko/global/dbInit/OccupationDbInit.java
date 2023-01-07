@@ -14,7 +14,7 @@ public class OccupationDbInit {
 
     private final OccupationService occupationService;
 
-    @PostConstruct
+//    @PostConstruct
     private void insertOccupationsIntoDb() {
         List<String> occupations = List.of(
                 "프론트엔드",

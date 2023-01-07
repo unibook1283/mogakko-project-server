@@ -2,6 +2,7 @@ package com.example.mogakko.domain.post.controller;
 
 import com.example.mogakko.domain.post.dto.PostRequestDTO;
 import com.example.mogakko.domain.post.dto.PostResponseDTO;
+import com.example.mogakko.domain.post.enums.Type;
 import com.example.mogakko.domain.post.service.PostService;
 import com.example.mogakko.domain.post.service.values.PostLanguageService;
 import com.example.mogakko.domain.post.service.values.PostLocationService;
@@ -24,38 +25,44 @@ public class PostController {
     private final PostLanguageService postLanguageService;
     private final PostLocationService postLocationService;
     private final PostOccupationService postOccupationService;
-    private final UserService userService;
 
     @PostMapping("/posts")
     public PostResponseDTO addPost(@RequestBody PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = postService.savePost(postRequestDTO);
         Long postId = postResponseDTO.getPostId();
 
+        Type type = postRequestDTO.getType();
+        if (type == Type.PROJECT || type == Type.MOGAKKO) {
+            savePostValues(postRequestDTO, postResponseDTO, postId);
+        }
+
+        return postResponseDTO;
+    }
+
+    private void savePostValues(PostRequestDTO postRequestDTO, PostResponseDTO postResponseDTO, Long postId) {
         List<LanguageDTO> languages = postLanguageService.saveLanguages(postRequestDTO.getLanguages(), postId);
         postResponseDTO.setLanguages(languages);
         List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
         postResponseDTO.setLocations(locations);
         List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
         postResponseDTO.setOccupations(occupations);
+    }
 
-        return postResponseDTO;
+    private void resetPostValues(Long postId) {
+        postLanguageService.resetPostLanguage(postId);
+        postLocationService.resetPostLocation(postId);
+        postOccupationService.resetPostOccupation(postId);
     }
 
     @PostMapping("/posts/{postId}")
     public PostResponseDTO updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = postService.updatePost(postId, postRequestDTO);
 
-        postLanguageService.resetPostLanguage(postId);
-        List<LanguageDTO> languages = postLanguageService.saveLanguages(postRequestDTO.getLanguages(), postId);
-        postResponseDTO.setLanguages(languages);
-
-        postLocationService.resetPostLocation(postId);
-        List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
-        postResponseDTO.setLocations(locations);
-
-        postOccupationService.resetPostOccupation(postId);
-        List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
-        postResponseDTO.setOccupations(occupations);
+        Type type = postRequestDTO.getType();
+        if (type == Type.PROJECT || type == Type.MOGAKKO) {
+            resetPostValues(postId);
+            savePostValues(postRequestDTO, postResponseDTO, postId);
+        }
 
         return postResponseDTO;
     }
@@ -67,8 +74,7 @@ public class PostController {
 
     @GetMapping("/users/{userId}/posts")
     public List<PostResponseDTO> getPostOfUser(@PathVariable Long userId) {
-        UserDTO userDTO = userService.findOne(userId);
-        return userDTO.getPosts();
+        return postService.findPostsByUser(userId);
     }
 
     @GetMapping("/posts/type/{postType}")

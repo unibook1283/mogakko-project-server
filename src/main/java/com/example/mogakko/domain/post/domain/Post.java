@@ -35,7 +35,7 @@ public class Post extends BaseTimeEntity {
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group")
+    @JoinColumn(name = "group_id")
     private Group group;
 
     private String title;
@@ -56,4 +56,5 @@ public class Post extends BaseTimeEntity {
         this.user = user;
         user.getPosts().add(this);
     }
+
 }

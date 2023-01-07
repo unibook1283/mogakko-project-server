@@ -5,6 +5,7 @@ import com.example.mogakko.domain.values.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
