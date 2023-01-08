@@ -28,6 +28,9 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<GroupUser> groupUsers = new ArrayList<GroupUser>();
 
+    @OneToMany(mappedBy = "group")
+    private List<GroupAdmission> groupAdmissions = new ArrayList<GroupAdmission>();
+
     @OneToOne(mappedBy = "group")
     private Post post;
 

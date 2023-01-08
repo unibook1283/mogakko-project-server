@@ -1,6 +1,8 @@
 package com.example.mogakko.global.exceptionHandler;
 
+import com.example.mogakko.domain.group.exception.AlreadyAppliedException;
 import com.example.mogakko.domain.group.exception.IsNotGroupMasterException;
+import com.example.mogakko.domain.group.exception.NotRecruitingGroupException;
 import com.example.mogakko.domain.user.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,11 +33,25 @@ public class ExControllerAdvice {
         return new ErrorResult("UNAUTH", e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ErrorResult isNotGroupMasterExHandler(IsNotGroupMasterException e) {
         log.error("[exceptionHandler] ex", e);
         return new ErrorResult("MASTER", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResult alreadyAppliedExHandler(AlreadyAppliedException e) {
+        log.error("[exceptionHandler] ex", e);
+        return new ErrorResult("ALREADY-APPLIED", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResult notRecruitingGroupExHandler(NotRecruitingGroupException e) {
+        log.error("[exceptionHandler] ex", e);
+        return new ErrorResult("NOT-RECRUIT", e.getMessage());
     }
 
 
