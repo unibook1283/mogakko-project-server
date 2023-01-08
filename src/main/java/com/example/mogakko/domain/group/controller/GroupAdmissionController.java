@@ -13,7 +13,7 @@ public class GroupAdmissionController {
 
     private final GroupAdmissionService groupAdmissionService;
 
-    @PostMapping("/groups/{groupId}/users/{userId}")
+    @PostMapping("/groups/{groupId}/application/users/{userId}")
     public GroupAdmissionDTO applyForAdmission(@PathVariable Long groupId, @PathVariable Long userId) {
         return groupAdmissionService.addGroupAdmission(groupId, userId);
     }

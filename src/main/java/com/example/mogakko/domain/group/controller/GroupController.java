@@ -23,17 +23,17 @@ public class GroupController {
         return groupService.getGroupListOfUser(memberId);
     }
 
-    @PostMapping("/groups/{groupId}/members/{memberId}")
+    @PostMapping("/groups/{groupId}/release/members/{memberId}")
     public void releaseGroupMember(@PathVariable Long groupId, @PathVariable Long memberId, @RequestBody UserIdDTO userIdDTO) {
         groupService.deleteGroupMember(groupId, memberId, userIdDTO);
     }
 
-    @GetMapping("/groups/{groupId}")
+    @GetMapping("/groups/{groupId}/status")
     public GroupStatusResponseDTO getGroupStatus(@PathVariable Long groupId) {
         return groupService.getGroupStatus(groupId);
     }
 
-    @PostMapping("/groups/{groupId}")
+    @PostMapping("/groups/{groupId}/status")
     public GroupStatusResponseDTO setGroupStatus(@PathVariable Long groupId, @RequestBody GroupStatusRequestDTO groupStatusRequestDTO) {
         return groupService.setGroupStatus(groupId, groupStatusRequestDTO.getGroupStatus());
     }
