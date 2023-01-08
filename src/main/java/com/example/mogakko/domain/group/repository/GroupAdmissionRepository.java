@@ -5,8 +5,11 @@ import com.example.mogakko.domain.group.domain.GroupAdmission;
 import com.example.mogakko.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GroupAdmissionRepository extends JpaRepository<GroupAdmission, Long> {
     Optional<GroupAdmission> findByGroupAndUser(Group group, User user);
+    List<GroupAdmission> findByGroup(Group group);
+    void deleteByGroupAndUser(Group group, User user);
 }

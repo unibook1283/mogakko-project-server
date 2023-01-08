@@ -1,5 +1,6 @@
 package com.example.mogakko.domain.group.domain;
 
+import com.example.mogakko.domain.group.enums.GroupStatus;
 import com.example.mogakko.domain.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,14 @@ public class GroupUser {
     private User user;
 
     private Boolean isMaster;
+
+    //==생성 메서드==//
+    public static GroupUser createGroupUser(Group group, User user) {
+        GroupUser groupUser = new GroupUser();
+        groupUser.setGroup(group);
+        groupUser.setUser(user);
+        groupUser.setIsMaster(false);
+        return groupUser;
+    }
 
 }
