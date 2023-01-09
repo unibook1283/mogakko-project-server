@@ -5,8 +5,10 @@ import com.example.mogakko.domain.group.repository.GroupRepository;
 import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.meeting.domain.Meeting;
 import com.example.mogakko.domain.meeting.domain.MeetingUser;
+import com.example.mogakko.domain.meeting.dto.AttendanceDTO;
 import com.example.mogakko.domain.meeting.dto.CreateMeetingRequestDTO;
 import com.example.mogakko.domain.meeting.dto.CreateMeetingResponseDTO;
+import com.example.mogakko.domain.meeting.dto.MeetingDTO;
 import com.example.mogakko.domain.meeting.repository.MeetingRepository;
 import com.example.mogakko.domain.meeting.repository.MeetingUserRepository;
 import com.example.mogakko.domain.user.domain.User;
@@ -15,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,6 +48,31 @@ public class MeetingService {
         Meeting saveMeeting = meetingRepository.save(meeting);
 
         return new CreateMeetingResponseDTO(saveMeeting);
+    }
+
+    public List<MeetingDTO> findMeetingListOfGroup(Long groupId) {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+
+        List<Meeting> meetings = meetingRepository.findByGroup(group);
+        return meetings.stream()
+                .map(meeting -> {
+                    List<MeetingUser> meetingUsers = meeting.getMeetingUsers();
+                    List<AttendanceDTO> attendanceDTOS = getAttendanceDTOS(meetingUsers);
+
+                    return new MeetingDTO(meeting, attendanceDTOS);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<AttendanceDTO> getAttendanceDTOS(List<MeetingUser> meetingUsers) {
+        List<AttendanceDTO> attendanceDTOS = meetingUsers.stream()
+                .map(meetingUser -> {
+                    User user = meetingUser.getUser();
+                    return new AttendanceDTO(user.getId(), user.getNickname(), meetingUser.getIsMaster());
+                })
+                .collect(Collectors.toList());
+        return attendanceDTOS;
     }
 
 }
