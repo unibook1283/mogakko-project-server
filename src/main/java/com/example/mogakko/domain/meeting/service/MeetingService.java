@@ -75,4 +75,11 @@ public class MeetingService {
         return attendanceDTOS;
     }
 
+    public void deleteMeeting(Long meetingId) {
+        Optional<Meeting> optionalMeeting = meetingRepository.findById(meetingId);
+        Meeting meeting = optionalMeeting.orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
+
+        meetingUserRepository.deleteAllByMeeting(meeting);
+        meetingRepository.delete(meeting);
+    }
 }

@@ -25,4 +25,9 @@ public class MeetingController {
         return meetingService.findMeetingListOfGroup(groupId);
     }
 
+    @DeleteMapping("/groups/{groupId}/meetings/{meetingId}")
+    public void deleteGroupMeeting(@PathVariable Long groupId, @PathVariable Long meetingId) {
+        meetingService.deleteMeeting(meetingId);
+    }
+
 }

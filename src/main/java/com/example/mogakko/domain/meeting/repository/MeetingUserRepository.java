@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MeetingUserRepository extends JpaRepository<MeetingUser, Long> {
     List<MeetingUser> findByMeeting(Meeting meeting);
+    void deleteAllByMeeting(Meeting meeting);
 }
