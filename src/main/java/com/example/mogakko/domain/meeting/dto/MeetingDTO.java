@@ -20,13 +20,13 @@ public class MeetingDTO {
 
     private String time;
 
-    private List<AttendanceDTO> attendanceList;
+    private List<AttendantDTO> attendanceList;
 
-    public MeetingDTO(Meeting meeting, List<AttendanceDTO> attendanceDTOS) {
+    public MeetingDTO(Meeting meeting, List<AttendantDTO> attendantDTOS) {
         this.meetingId = meeting.getId();
         this.date = meeting.getDate();
         this.place = meeting.getPlace();
         this.time = meeting.getTime();
-        this.attendanceList = attendanceDTOS;
+        this.attendanceList = attendantDTOS;
     }
 }

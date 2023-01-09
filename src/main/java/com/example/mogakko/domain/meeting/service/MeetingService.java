@@ -2,13 +2,9 @@ package com.example.mogakko.domain.meeting.service;
 
 import com.example.mogakko.domain.group.domain.Group;
 import com.example.mogakko.domain.group.repository.GroupRepository;
-import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.meeting.domain.Meeting;
 import com.example.mogakko.domain.meeting.domain.MeetingUser;
-import com.example.mogakko.domain.meeting.dto.AttendanceDTO;
-import com.example.mogakko.domain.meeting.dto.CreateMeetingRequestDTO;
-import com.example.mogakko.domain.meeting.dto.CreateMeetingResponseDTO;
-import com.example.mogakko.domain.meeting.dto.MeetingDTO;
+import com.example.mogakko.domain.meeting.dto.*;
 import com.example.mogakko.domain.meeting.repository.MeetingRepository;
 import com.example.mogakko.domain.meeting.repository.MeetingUserRepository;
 import com.example.mogakko.domain.user.domain.User;
@@ -58,21 +54,21 @@ public class MeetingService {
         return meetings.stream()
                 .map(meeting -> {
                     List<MeetingUser> meetingUsers = meeting.getMeetingUsers();
-                    List<AttendanceDTO> attendanceDTOS = getAttendanceDTOS(meetingUsers);
+                    List<AttendantDTO> attendantDTOS = getAttendanceDTOS(meetingUsers);
 
-                    return new MeetingDTO(meeting, attendanceDTOS);
+                    return new MeetingDTO(meeting, attendantDTOS);
                 })
                 .collect(Collectors.toList());
     }
 
-    private List<AttendanceDTO> getAttendanceDTOS(List<MeetingUser> meetingUsers) {
-        List<AttendanceDTO> attendanceDTOS = meetingUsers.stream()
+    private List<AttendantDTO> getAttendanceDTOS(List<MeetingUser> meetingUsers) {
+        List<AttendantDTO> attendantDTOS = meetingUsers.stream()
                 .map(meetingUser -> {
                     User user = meetingUser.getUser();
-                    return new AttendanceDTO(user.getId(), user.getNickname(), meetingUser.getIsMaster());
+                    return new AttendantDTO(user.getId(), user.getNickname(), meetingUser.getIsMaster());
                 })
                 .collect(Collectors.toList());
-        return attendanceDTOS;
+        return attendantDTOS;
     }
 
     public void deleteMeeting(Long meetingId) {
@@ -81,5 +77,31 @@ public class MeetingService {
 
         meetingUserRepository.deleteAllByMeeting(meeting);
         meetingRepository.delete(meeting);
+    }
+
+
+    public MeetingUserDTO setMeetingAttendance(Long meetingId, Long memberId, Boolean attendance) {
+        Optional<Meeting> optionalMeeting = meetingRepository.findById(meetingId);
+        Meeting meeting = optionalMeeting.orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
+
+        Optional<User> userOptional = userRepository.findById(memberId);
+        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+
+        Optional<MeetingUser> optionalMeetingUser = meetingUserRepository.findByMeetingAndUser(meeting, user);
+
+        MeetingUser meetingUser;
+        if (optionalMeetingUser.isPresent()) {
+            meetingUser = optionalMeetingUser.get();
+            meetingUser.setAttendance(attendance);
+        }
+        else {
+            meetingUser = new MeetingUser();
+            meetingUser.setMeeting(meeting);
+            meetingUser.setUser(user);
+            meetingUser.setAttendance(attendance);
+            meetingUser.setIsMaster(false);
+            meetingUser = meetingUserRepository.save(meetingUser);
+        }
+        return new MeetingUserDTO(meetingUser);
     }
 }
