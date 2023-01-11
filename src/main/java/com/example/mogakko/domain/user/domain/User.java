@@ -1,5 +1,6 @@
 package com.example.mogakko.domain.user.domain;
 
+import com.example.mogakko.domain.evaluation.domain.Evaluation;
 import com.example.mogakko.domain.group.domain.GroupAdmission;
 import com.example.mogakko.domain.group.domain.GroupUser;
 import com.example.mogakko.domain.post.domain.Post;
@@ -37,6 +38,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<GroupAdmission> groupAdmissions = new ArrayList<GroupAdmission>();
+
+    // 본인이 받은 평가 리스트
+    @OneToMany(mappedBy = "user")
+    private List<Evaluation> evaluations = new ArrayList<Evaluation>();
 
     private String username;
 
