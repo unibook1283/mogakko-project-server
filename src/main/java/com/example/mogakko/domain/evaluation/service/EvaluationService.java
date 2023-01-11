@@ -48,4 +48,8 @@ public class EvaluationService {
                 .map(evaluation -> new EvaluationDTO(evaluation))
                 .collect(Collectors.toList());
     }
+
+    public void deleteById(Long evaluationId) {
+        evaluationRepository.deleteById(evaluationId);
+    }
 }

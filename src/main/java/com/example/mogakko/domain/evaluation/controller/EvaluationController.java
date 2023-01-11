@@ -25,4 +25,8 @@ public class EvaluationController {
         return evaluationService.findEvaluationsOfUser(userId);
     }
 
+    @DeleteMapping("/evaluations/{evaluationId}")
+    public void deleteEvaluation(@PathVariable Long evaluationId) {
+        evaluationService.deleteById(evaluationId);
+    }
 }
