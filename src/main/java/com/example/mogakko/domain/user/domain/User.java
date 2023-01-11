@@ -40,7 +40,7 @@ public class User {
     private List<GroupAdmission> groupAdmissions = new ArrayList<GroupAdmission>();
 
     // 본인이 받은 평가 리스트
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "evaluatedUser")
     private List<Evaluation> evaluations = new ArrayList<Evaluation>();
 
     private String username;

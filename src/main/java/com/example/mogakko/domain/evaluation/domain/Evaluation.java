@@ -19,12 +19,12 @@ public class Evaluation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User evaluated;
+    @JoinColumn(name = "evaluated_user_id")
+    private User evaluatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User evaluating;
+    @JoinColumn(name = "evaluating_user_id")
+    private User evaluatingUser;
 
     private String content;
 
