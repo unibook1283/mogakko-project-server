@@ -1,6 +1,7 @@
 package com.example.mogakko.domain.evaluation.controller;
 
 import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
+import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
 import com.example.mogakko.domain.evaluation.service.EvaluationService;
@@ -29,4 +30,10 @@ public class EvaluationController {
     public void deleteEvaluation(@PathVariable Long evaluationId) {
         evaluationService.deleteById(evaluationId);
     }
+
+    @PatchMapping("/evaluations/{evaluationId}")
+    public EvaluationDTO updateEvaluation(@PathVariable Long evaluationId, @RequestBody ContentDTO contentDTO) {
+        return evaluationService.updateEvaluation(evaluationId, contentDTO);
+    }
+
 }

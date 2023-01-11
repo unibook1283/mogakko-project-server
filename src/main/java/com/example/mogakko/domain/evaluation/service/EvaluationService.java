@@ -2,6 +2,7 @@ package com.example.mogakko.domain.evaluation.service;
 
 import com.example.mogakko.domain.evaluation.domain.Evaluation;
 import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
+import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
 import com.example.mogakko.domain.user.domain.User;
@@ -51,5 +52,14 @@ public class EvaluationService {
 
     public void deleteById(Long evaluationId) {
         evaluationRepository.deleteById(evaluationId);
+    }
+
+    public EvaluationDTO updateEvaluation(Long evaluationId, ContentDTO contentDTO) {
+        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluationId);
+        Evaluation evaluation = optionalEvaluation.orElseThrow(() -> new IllegalArgumentException("잘못된 evaluationId"));
+
+        evaluation.setContent(contentDTO.getContent());
+
+        return new EvaluationDTO(evaluation);
     }
 }
