@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,5 +39,16 @@ public class PostReportService {
 
         PostReport savePostReport = postReportRepository.save(postReport);
         return new PostReportDTO(savePostReport);
+    }
+
+    public List<PostReportDTO> findPostReports(Long postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+
+        List<PostReport> postReports = postReportRepository.findByPost(post);
+
+        return postReports.stream()
+                .map(postReport -> new PostReportDTO(postReport))
+                .collect(Collectors.toList());
     }
 }
