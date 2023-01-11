@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,4 +39,13 @@ public class EvaluationService {
         return new EvaluationDTO(saveEvaluation);
     }
 
+    public List<EvaluationDTO> findEvaluationsOfUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+
+        List<Evaluation> evaluations = evaluationRepository.findByEvaluatedUser(user);
+        return evaluations.stream()
+                .map(evaluation -> new EvaluationDTO(evaluation))
+                .collect(Collectors.toList());
+    }
 }

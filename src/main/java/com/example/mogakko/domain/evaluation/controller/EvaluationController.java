@@ -5,10 +5,9 @@ import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
 import com.example.mogakko.domain.evaluation.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +18,11 @@ public class EvaluationController {
     @PostMapping("/users/{userId}/evaluations")
     public EvaluationDTO addEvaluation(@PathVariable Long userId, @RequestBody AddEvaluationRequestDTO addEvaluationRequestDTO) {
         return evaluationService.saveEvaluation(userId, addEvaluationRequestDTO);
+    }
+
+    @GetMapping("/users/{userId}/evaluations")
+    public List<EvaluationDTO> getEvaluation(@PathVariable Long userId) {
+        return evaluationService.findEvaluationsOfUser(userId);
     }
 
 }
