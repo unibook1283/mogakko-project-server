@@ -26,11 +26,11 @@ public class CommentReportService {
     private final UserRepository userRepository;
 
     public CommentReportDTO saveCommentReport(CommentReportRequestDTO commentReportRequestDTO) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentReportRequestDTO.getCommentId());
-        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+        Comment comment = commentRepository.findById(commentReportRequestDTO.getCommentId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
 
-        Optional<User> optionalUser = userRepository.findById(commentReportRequestDTO.getUserId());
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(commentReportRequestDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         CommentReport commentReport = new CommentReport();
         commentReport.setComment(comment);
@@ -42,8 +42,8 @@ public class CommentReportService {
     }
 
     public List<CommentReportDTO> findCommentReports(Long commentId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
 
         List<CommentReport> commentReports = commentReportRepository.findByComment(comment);
 

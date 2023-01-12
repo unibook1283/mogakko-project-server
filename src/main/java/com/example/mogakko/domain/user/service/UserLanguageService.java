@@ -23,11 +23,11 @@ public class UserLanguageService {
     private final UserLanguageRepository userLanguageRepository;
 
     public Long prefer(Long userId, Long languageId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<Language> optionalLanguage = languageRepository.findById(languageId);
-        Language language = optionalLanguage.get();     // languageId는 language name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        // languageId는 language name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        Language language = languageRepository.findById(languageId).get();
 
         UserLanguage userLanguage = new UserLanguage();
         userLanguage.setUser(user);
@@ -39,9 +39,8 @@ public class UserLanguageService {
     }
 
     public List<UserLanguage> findLanguagesOfUser(Long userId) {
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         return userLanguageRepository.findByUser(user);
     }

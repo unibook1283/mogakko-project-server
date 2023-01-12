@@ -44,14 +44,14 @@ public class UserService {
     }
 
     public ProfileResponseDTO getProfileByUserId(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
         return new ProfileResponseDTO(user);
     }
 
     public UserDTO findOne(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
         return new UserDTO(user);
     }
 
@@ -74,8 +74,8 @@ public class UserService {
     }
 
     public ProfileResponseDTO saveUserProfile(Long userId, ProfileRequestDTO profileRequestDTO) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         user.setNickname(profileRequestDTO.getNickname());
         user.setOneLineIntroduction(profileRequestDTO.getOneLineIntroduction());
@@ -96,8 +96,8 @@ public class UserService {
         List<LanguageDTO> languages = profileRequestDTO.getLanguages();
         languages.stream()
                 .forEach(languageDTO -> {
-                    Optional<Language> optionalLanguage = languageRepository.findById(languageDTO.getLanguageId());
-                    Language language = optionalLanguage.orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
+                    Language language = languageRepository.findById(languageDTO.getLanguageId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
 
                     UserLanguage userLanguage = new UserLanguage();
                     userLanguage.setUser(user);
@@ -114,8 +114,8 @@ public class UserService {
         List<LocationDTO> locations = profileRequestDTO.getLocations();
         locations.stream()
                 .forEach(locationDTO -> {
-                    Optional<Location> optionalLocation = locationRepository.findById(locationDTO.getLocationId());
-                    Location location = optionalLocation.orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
+                    Location location = locationRepository.findById(locationDTO.getLocationId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
 
                     UserLocation userLocation = new UserLocation();
                     userLocation.setUser(user);
@@ -132,8 +132,8 @@ public class UserService {
         List<OccupationDTO> occupations = profileRequestDTO.getOccupations();
         occupations.stream()
                 .forEach(occupationDTO -> {
-                    Optional<Occupation> optionalOccupation = occupationRepository.findById(occupationDTO.getOccupationId());
-                    Occupation occupation = optionalOccupation.orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
+                    Occupation occupation = occupationRepository.findById(occupationDTO.getOccupationId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
 
                     UserOccupation userOccupation = new UserOccupation();
                     userOccupation.setUser(user);

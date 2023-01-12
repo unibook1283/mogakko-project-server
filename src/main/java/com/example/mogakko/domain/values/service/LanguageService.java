@@ -24,12 +24,9 @@ public class LanguageService {
     }
 
     public LanguageDTO findOne(Long languageId) {
-        Optional<Language> optionalLanguage = languageRepository.findById(languageId);
-        if (optionalLanguage.isPresent()) {
-            return new LanguageDTO(optionalLanguage.get());
-        } else {
-            return null;
-        }
+        Language language = languageRepository.findById(languageId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
+        return new LanguageDTO(language);
     }
 
     public List<LanguageDTO> findAll() {

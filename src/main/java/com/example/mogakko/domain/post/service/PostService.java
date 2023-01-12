@@ -32,8 +32,8 @@ public class PostService {
 
     public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {    // languages, locations, occupations는 여기서 말고 values service에서
 
-        Optional<User> userOptional = userRepository.findById(postRequestDTO.getUserId());
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(postRequestDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         Post post = postRequestDTO.toEntity(user);
         Post savePost = postRepository.save(post);
@@ -60,11 +60,11 @@ public class PostService {
     }
 
     public PostResponseDTO updatePost(Long postId, PostRequestDTO postRequestDTO) {
-        Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
-        Optional<User> userOptional = userRepository.findById(postRequestDTO.getUserId());
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(postRequestDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
         if (user.getId() != post.getUser().getId()) {
             throw new IllegalArgumentException("해당 user는 게시글을 수정할 권한이 없습니다.");
         }
@@ -103,8 +103,8 @@ public class PostService {
     }
 
     public PostResponseDTO findOne(Long postId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         PostResponseDTO postResponseDTO = new PostResponseDTO(post);
 
@@ -116,8 +116,7 @@ public class PostService {
 
     private void setGroupInfo(Post post, PostResponseDTO postResponseDTO, Type type) {
         if (type == Type.PROJECT || type == Type.MOGAKKO) {
-            Optional<Group> groupOptional = groupRepository.findById(post.getGroup().getId());
-            Group group = groupOptional.get();
+            Group group = groupRepository.findById(post.getGroup().getId()).get();
             postResponseDTO.setGroupId(group.getId());
             postResponseDTO.setGroupStatus(group.getGroupStatus());
         }
@@ -139,8 +138,8 @@ public class PostService {
     }
 
     public List<PostResponseDTO> findPostsByUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         List<Post> posts = user.getPosts();
         return posts.stream()

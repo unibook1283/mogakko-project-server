@@ -32,11 +32,11 @@ public class GroupAdmissionService {
     private final GroupUserRepository groupUserRepository;
 
     public GroupAdmissionDTO addGroupAdmission(Long groupId, Long userId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         if (group.getGroupStatus() != GroupStatus.RECRUIT) {
             throw new NotRecruitingGroupException("모집중인 그룹이 아닙니다.");
@@ -55,8 +55,8 @@ public class GroupAdmissionService {
     }
 
     public List<ApplicantsDTO> findApplicantsOfGroup(Long groupId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
         List<GroupAdmission> groupAdmissions = groupAdmissionRepository.findByGroup(group);
 
@@ -71,11 +71,11 @@ public class GroupAdmissionService {
     }
 
     public void acceptApplicant(Long groupId, Long userId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         groupAdmissionRepository.deleteByGroupAndUser(group, user);
 
@@ -83,11 +83,11 @@ public class GroupAdmissionService {
     }
 
     public void rejectApplicant(Long groupId, Long userId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         groupAdmissionRepository.deleteByGroupAndUser(group, user);
     }

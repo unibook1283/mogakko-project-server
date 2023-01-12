@@ -26,11 +26,11 @@ public class PostReportService {
     private final UserRepository userRepository;
 
     public PostReportDTO savePostReport(PostReportRequestDTO postReportRequestDTO) {
-        Optional<Post> optionalPost = postRepository.findById(postReportRequestDTO.getPostId());
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postReportRequestDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
-        Optional<User> optionalUser = userRepository.findById(postReportRequestDTO.getUserId());
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(postReportRequestDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         PostReport postReport = new PostReport();
         postReport.setPost(post);
@@ -42,8 +42,8 @@ public class PostReportService {
     }
 
     public List<PostReportDTO> findPostReports(Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         List<PostReport> postReports = postReportRepository.findByPost(post);
 

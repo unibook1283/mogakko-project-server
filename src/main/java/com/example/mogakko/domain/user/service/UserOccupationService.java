@@ -24,11 +24,11 @@ public class UserOccupationService {
     private final UserOccupationRepository userOccupationRepository;
 
     public Long prefer(Long userId, Long occupationId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<Occupation> optionalOccupation = occupationRepository.findById(occupationId);
-        Occupation occupation = optionalOccupation.get();     // occupationId는 occupation name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        // occupationId는 occupation name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        Occupation occupation = occupationRepository.findById(occupationId).get();
 
         UserOccupation userOccupation = new UserOccupation();
         userOccupation.setUser(user);
@@ -40,9 +40,8 @@ public class UserOccupationService {
     }
 
     public List<UserOccupation> findOccupationsOfUser(Long userId) {
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         return userOccupationRepository.findByUser(user);
     }

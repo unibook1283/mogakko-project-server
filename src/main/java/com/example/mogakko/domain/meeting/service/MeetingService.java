@@ -28,11 +28,11 @@ public class MeetingService {
     private final MeetingUserRepository meetingUserRepository;
 
     public CreateMeetingResponseDTO createMeeting(Long groupId, CreateMeetingRequestDTO createMeetingRequestDTO) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
-        Optional<User> optionalUser = userRepository.findById(createMeetingRequestDTO.getMemberId());
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(createMeetingRequestDTO.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         MeetingUser meetingUser = new MeetingUser();
         meetingUser.setUser(user);
@@ -47,8 +47,8 @@ public class MeetingService {
     }
 
     public List<MeetingDTO> findMeetingListOfGroup(Long groupId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
         List<Meeting> meetings = meetingRepository.findByGroup(group);
         return meetings.stream()
@@ -72,8 +72,8 @@ public class MeetingService {
     }
 
     public void deleteMeeting(Long meetingId) {
-        Optional<Meeting> optionalMeeting = meetingRepository.findById(meetingId);
-        Meeting meeting = optionalMeeting.orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
 
         meetingUserRepository.deleteAllByMeeting(meeting);
         meetingRepository.delete(meeting);
@@ -81,11 +81,11 @@ public class MeetingService {
 
 
     public MeetingUserDTO setMeetingAttendance(Long meetingId, Long memberId, Boolean attendance) {
-        Optional<Meeting> optionalMeeting = meetingRepository.findById(meetingId);
-        Meeting meeting = optionalMeeting.orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
 
-        Optional<User> userOptional = userRepository.findById(memberId);
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         Optional<MeetingUser> optionalMeetingUser = meetingUserRepository.findByMeetingAndUser(meeting, user);
 

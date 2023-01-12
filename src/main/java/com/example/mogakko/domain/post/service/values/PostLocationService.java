@@ -25,20 +25,20 @@ public class PostLocationService {
     private final LocationRepository locationRepository;
 
     public void resetPostLocation(Long postId) {    //게시글 수정에서 쓸 것
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         postLocationRepository.deleteAllByPost(post);
     }
 
     public List<LocationDTO> saveLocations(List<LocationDTO> locations, Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         return locations.stream()
                 .map(locationDTO -> {
-                    Optional<Location> optionalLocation = locationRepository.findById(locationDTO.getLocationId());
-                    Location location = optionalLocation.orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
+                    Location location = locationRepository.findById(locationDTO.getLocationId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
 
                     PostLocation postLocation = PostLocation.createPostLocation(post, location);
                     postLocationRepository.save(postLocation);

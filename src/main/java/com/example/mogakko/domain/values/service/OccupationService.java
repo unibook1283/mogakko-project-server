@@ -24,12 +24,9 @@ public class OccupationService {
     }
 
     public OccupationDTO findOne(Long occupationId) {
-        Optional<Occupation> optionalOccupation = occupationRepository.findById(occupationId);
-        if (optionalOccupation.isPresent()) {
-            return new OccupationDTO(optionalOccupation.get());
-        } else {
-            return null;
-        }
+        Occupation occupation = occupationRepository.findById(occupationId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
+        return new OccupationDTO(occupation);
     }
 
     public List<OccupationDTO> findAll() {

@@ -25,20 +25,20 @@ public class PostOccupationService {
     private final OccupationRepository occupationRepository;
 
     public void resetPostOccupation(Long postId) {    //게시글 수정에서 쓸 것
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         postOccupationRepository.deleteAllByPost(post);
     }
 
     public List<OccupationDTO> saveOccupations(List<OccupationDTO> occupations, Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         return occupations.stream()
                 .map(occupationDTO -> {
-                    Optional<Occupation> optionalOccupation = occupationRepository.findById(occupationDTO.getOccupationId());
-                    Occupation occupation = optionalOccupation.orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
+                    Occupation occupation = occupationRepository.findById(occupationDTO.getOccupationId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
 
                     PostOccupation postOccupation = PostOccupation.createPostOccupation(post, occupation);
                     postOccupationRepository.save(postOccupation);

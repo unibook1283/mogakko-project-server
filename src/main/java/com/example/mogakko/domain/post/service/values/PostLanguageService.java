@@ -26,20 +26,20 @@ public class PostLanguageService {
     private final LanguageRepository languageRepository;
 
     public void resetPostLanguage(Long postId) {    //게시글 수정에서 쓸 것
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         postLanguageRepository.deleteAllByPost(post);
     }
 
     public List<LanguageDTO> saveLanguages(List<LanguageDTO> languages, Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         return languages.stream()
                 .map(languageDTO -> {
-                    Optional<Language> optionalLanguage = languageRepository.findById(languageDTO.getLanguageId());
-                    Language language = optionalLanguage.orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
+                    Language language = languageRepository.findById(languageDTO.getLanguageId())
+                            .orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
 
                     PostLanguage postLanguage = PostLanguage.createPostLanguage(post, language);
                     postLanguageRepository.save(postLanguage);

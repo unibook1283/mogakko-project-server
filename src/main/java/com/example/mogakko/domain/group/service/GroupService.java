@@ -30,8 +30,8 @@ public class GroupService {
     private final UserRepository userRepository;
 
     public List<GroupMemberDTO> findGroupMembersByGroupId(Long groupId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
         List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
 
@@ -41,8 +41,8 @@ public class GroupService {
     }
 
     public List<MyGroupDTO> getGroupListOfUser(Long memberId) {
-        Optional<User> userOptional = userRepository.findById(memberId);
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         return user.getGroupUsers().stream()
                 .map(groupUser -> {
@@ -51,8 +51,7 @@ public class GroupService {
                     myGroupDTO.setGroupId(group.getId());
                     myGroupDTO.setGroupStatus(group.getGroupStatus());
 
-                    Optional<GroupUser> optionalMasterGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true);
-                    GroupUser masterGroupUser = optionalMasterGroupUser.get();
+                    GroupUser masterGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true).get();
                     myGroupDTO.setGroupMaster(masterGroupUser.getUser().getNickname());
 
                     Post post = group.getPost();
@@ -70,17 +69,16 @@ public class GroupService {
     }
 
     public void deleteGroupMember(Long groupId, Long memberId, UserIdDTO userIdDTO) {
-        Optional<User> deleteUserOptional = userRepository.findById(memberId);
-        User deleteUser = deleteUserOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User deleteUser = userRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<User> callerOptional = userRepository.findById(userIdDTO.getUserId());
-        User caller = callerOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User caller = userRepository.findById(userIdDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
-        Optional<GroupUser> optionalGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true);
-        GroupUser masterGroupUser = optionalGroupUser.get();
+        GroupUser masterGroupUser = groupUserRepository.findByGroupAndIsMaster(group, true).get();
 
         if (caller.getId() != masterGroupUser.getUser().getId()) {
             throw new IsNotGroupMasterException("그룹장만 실행할 수 있습니다.");
@@ -90,15 +88,15 @@ public class GroupService {
     }
 
     public GroupStatusResponseDTO getGroupStatus(Long groupId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
         return new GroupStatusResponseDTO(group);
     }
 
     public GroupStatusResponseDTO setGroupStatus(Long groupId, GroupStatus groupStatus) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-        Group group = optionalGroup.orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
 
         group.setGroupStatus(groupStatus);
 

@@ -24,11 +24,11 @@ public class UserLocationService {
     private final UserLocationRepository userLocationRepository;
 
     public Long prefer(Long userId, Long locationId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<Location> optionalLocation = locationRepository.findById(locationId);
-        Location location = optionalLocation.get();     // locationId는 location name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        // locationId는 location name으로 찾을것이기 때문에 null이 아님이 보장됨.
+        Location location = locationRepository.findById(locationId).get();
 
         UserLocation userLocation = new UserLocation();
         userLocation.setUser(user);
@@ -40,9 +40,8 @@ public class UserLocationService {
     }
 
     public List<UserLocation> findLocationsOfUser(Long userId) {
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         return userLocationRepository.findByUser(user);
     }

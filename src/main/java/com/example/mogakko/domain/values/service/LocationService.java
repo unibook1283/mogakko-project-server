@@ -24,12 +24,9 @@ public class LocationService {
     }
 
     public LocationDTO findOne(Long locationId) {
-        Optional<Location> optionalLocation = locationRepository.findById(locationId);
-        if (optionalLocation.isPresent()) {
-            return new LocationDTO(optionalLocation.get());
-        } else {
-            return null;
-        }
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
+        return new LocationDTO(location);
     }
 
     public List<LocationDTO> findAll() {

@@ -24,11 +24,11 @@ public class EvaluationService {
     private final UserRepository userRepository;
 
     public EvaluationDTO saveEvaluation(Long evaluatedUserId, AddEvaluationRequestDTO addEvaluationRequestDTO) {
-        Optional<User> optionalEvaluated = userRepository.findById(evaluatedUserId);
-        User evaluated = optionalEvaluated.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User evaluated = userRepository.findById(evaluatedUserId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
-        Optional<User> optionalEvaluating = userRepository.findById(addEvaluationRequestDTO.getEvaluatingUserId());
-        User evaluating = optionalEvaluating.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User evaluating = userRepository.findById(addEvaluationRequestDTO.getEvaluatingUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         Evaluation evaluation = new Evaluation();
         evaluation.setEvaluatedUser(evaluated);
@@ -41,8 +41,8 @@ public class EvaluationService {
     }
 
     public List<EvaluationDTO> findEvaluationsOfUser(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         List<Evaluation> evaluations = evaluationRepository.findByEvaluatedUser(user);
         return evaluations.stream()
@@ -55,8 +55,8 @@ public class EvaluationService {
     }
 
     public EvaluationDTO updateEvaluation(Long evaluationId, ContentDTO contentDTO) {
-        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluationId);
-        Evaluation evaluation = optionalEvaluation.orElseThrow(() -> new IllegalArgumentException("잘못된 evaluationId"));
+        Evaluation evaluation = evaluationRepository.findById(evaluationId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 evaluationId"));
 
         evaluation.setContent(contentDTO.getContent());
 

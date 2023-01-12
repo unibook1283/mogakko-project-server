@@ -27,11 +27,11 @@ public class CommentService {
     private final UserRepository userRepository;
 
     public CommentResponseDTO saveComment(CommentRequestDTO commentRequestDTO) {
-        Optional<Post> optionalPost = postRepository.findById(commentRequestDTO.getPostId());
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(commentRequestDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
-        Optional<User> optionalUser = userRepository.findById(commentRequestDTO.getUserId());
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+        User user = userRepository.findById(commentRequestDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
 
         Comment rootComment = null;
         if (commentRequestDTO.getRootCommentId() != null) {
@@ -51,8 +51,8 @@ public class CommentService {
     }
 
     public List<CommentResponseDTO> findCommentsByPost(Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Post post = optionalPost.orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
 
         return commentRepository.findByPost(post).stream()
                 .map(comment -> new CommentResponseDTO(comment))
@@ -60,15 +60,15 @@ public class CommentService {
     }
 
     public void deleteComment(Long commentId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
         commentRepository.deleteAllByRoot(comment);
         commentRepository.deleteById(commentId);
     }
 
     public CommentResponseDTO updateComment(Long commentId, UpdateCommentDTO updateCommentDTO) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-        Comment comment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
 
         comment.setContent(updateCommentDTO.getContent());
         return new CommentResponseDTO(comment);
