@@ -16,13 +16,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public EvaluationDTO saveEvaluation(Long evaluatedUserId, AddEvaluationRequestDTO addEvaluationRequestDTO) {
         User evaluated = userRepository.findById(evaluatedUserId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
@@ -50,6 +51,7 @@ public class EvaluationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(Long evaluationId) {
         evaluationRepository.deleteById(evaluationId);
     }

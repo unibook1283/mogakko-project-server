@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MeetingService {
 
@@ -27,6 +27,7 @@ public class MeetingService {
     private final UserRepository userRepository;
     private final MeetingUserRepository meetingUserRepository;
 
+    @Transactional
     public CreateMeetingResponseDTO createMeeting(Long groupId, CreateMeetingRequestDTO createMeetingRequestDTO) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
@@ -71,6 +72,7 @@ public class MeetingService {
         return attendantDTOS;
     }
 
+    @Transactional
     public void deleteMeeting(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));
@@ -80,6 +82,7 @@ public class MeetingService {
     }
 
 
+    @Transactional
     public MeetingUserDTO setMeetingAttendance(Long meetingId, Long memberId, Boolean attendance) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 meetingId"));

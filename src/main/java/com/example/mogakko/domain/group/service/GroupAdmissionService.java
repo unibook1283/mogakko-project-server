@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class GroupAdmissionService {
 
@@ -31,6 +31,7 @@ public class GroupAdmissionService {
     private final UserRepository userRepository;
     private final GroupUserRepository groupUserRepository;
 
+    @Transactional
     public GroupAdmissionDTO addGroupAdmission(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
@@ -70,6 +71,7 @@ public class GroupAdmissionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void acceptApplicant(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
@@ -82,6 +84,7 @@ public class GroupAdmissionService {
         groupUserRepository.save(GroupUser.createGroupUser(group, user));
     }
 
+    @Transactional
     public void rejectApplicant(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));

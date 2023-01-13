@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserLocationService {
 
@@ -23,6 +23,7 @@ public class UserLocationService {
     private final LocationRepository locationRepository;
     private final UserLocationRepository userLocationRepository;
 
+    @Transactional
     public Long prefer(Long userId, Long locationId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));

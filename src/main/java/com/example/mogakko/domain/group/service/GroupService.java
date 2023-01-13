@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class GroupService {
 
@@ -68,6 +68,7 @@ public class GroupService {
 
     }
 
+    @Transactional
     public void deleteGroupMember(Long groupId, Long memberId, UserIdDTO userIdDTO) {
         User deleteUser = userRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
@@ -94,6 +95,7 @@ public class GroupService {
         return new GroupStatusResponseDTO(group);
     }
 
+    @Transactional
     public GroupStatusResponseDTO setGroupStatus(Long groupId, GroupStatus groupStatus) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));

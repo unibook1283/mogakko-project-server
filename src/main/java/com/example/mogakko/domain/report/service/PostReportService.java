@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostReportService {
 
@@ -25,6 +25,7 @@ public class PostReportService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public PostReportDTO savePostReport(PostReportRequestDTO postReportRequestDTO) {
         Post post = postRepository.findById(postReportRequestDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));

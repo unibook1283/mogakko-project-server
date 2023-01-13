@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentReportService {
 
@@ -25,6 +25,7 @@ public class CommentReportService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public CommentReportDTO saveCommentReport(CommentReportRequestDTO commentReportRequestDTO) {
         Comment comment = commentRepository.findById(commentReportRequestDTO.getCommentId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserLanguageService {
 
@@ -22,6 +22,7 @@ public class UserLanguageService {
     private final LanguageRepository languageRepository;
     private final UserLanguageRepository userLanguageRepository;
 
+    @Transactional
     public Long prefer(Long userId, Long languageId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));

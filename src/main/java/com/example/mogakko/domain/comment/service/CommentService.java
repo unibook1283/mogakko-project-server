@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -26,6 +26,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public CommentResponseDTO saveComment(CommentRequestDTO commentRequestDTO) {
         Post post = postRepository.findById(commentRequestDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
@@ -59,6 +60,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
@@ -66,6 +68,7 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
+    @Transactional
     public CommentResponseDTO updateComment(Long commentId, UpdateCommentDTO updateCommentDTO) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));

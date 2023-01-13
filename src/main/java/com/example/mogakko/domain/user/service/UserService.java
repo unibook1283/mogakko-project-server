@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
@@ -38,6 +38,7 @@ public class UserService {
     private final LocationRepository locationRepository;
     private final OccupationRepository occupationRepository;
 
+    @Transactional
     public UserJoinResponseDTO join(UserJoinRequestDTO userAuthDTO) {
         User user = userRepository.save(userAuthDTO.toEntity());
         return new UserJoinResponseDTO(user.getId(), user.getUsername(), user.getPassword());
@@ -73,6 +74,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public ProfileResponseDTO saveUserProfile(Long userId, ProfileRequestDTO profileRequestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));

@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostLocationService {
 
@@ -24,6 +24,7 @@ public class PostLocationService {
     private final PostLocationRepository postLocationRepository;
     private final LocationRepository locationRepository;
 
+    @Transactional
     public void resetPostLocation(Long postId) {    //게시글 수정에서 쓸 것
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
@@ -31,6 +32,7 @@ public class PostLocationService {
         postLocationRepository.deleteAllByPost(post);
     }
 
+    @Transactional
     public List<LocationDTO> saveLocations(List<LocationDTO> locations, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));

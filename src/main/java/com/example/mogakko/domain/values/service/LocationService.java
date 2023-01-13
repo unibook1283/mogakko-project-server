@@ -12,12 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class LocationService {
 
     @Autowired
     LocationRepository locationRepository;
 
+    @Transactional
     public Long saveLocation(LocationDTO locationDTO) {
         Location location = locationRepository.save(locationDTO.toEntity());
         return location.getId();

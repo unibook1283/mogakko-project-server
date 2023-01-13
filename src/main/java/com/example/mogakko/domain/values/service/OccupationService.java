@@ -12,12 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class OccupationService {
 
     @Autowired
     OccupationRepository occupationRepository;
 
+    @Transactional
     public Long saveOccupation(OccupationDTO occupationDTO) {
         Occupation occupation = occupationRepository.save(occupationDTO.toEntity());
         return occupation.getId();

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
 
@@ -30,6 +30,7 @@ public class PostService {
     private final GroupRepository groupRepository;
     private final GroupUserRepository groupUserRepository;
 
+    @Transactional
     public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {    // languages, locations, occupations는 여기서 말고 values service에서
 
         User user = userRepository.findById(postRequestDTO.getUserId())
@@ -59,6 +60,7 @@ public class PostService {
         return postResponseDTO;
     }
 
+    @Transactional
     public PostResponseDTO updatePost(Long postId, PostRequestDTO postRequestDTO) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
@@ -81,6 +83,7 @@ public class PostService {
         return postResponseDTO;
     }
 
+    @Transactional
     private void setSpecificInfo(PostRequestDTO postRequestDTO, Post post) {
         Type type = postRequestDTO.getType();
         switch (type) {

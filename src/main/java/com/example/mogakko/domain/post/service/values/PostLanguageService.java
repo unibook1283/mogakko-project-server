@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostLanguageService {
 
@@ -25,6 +25,7 @@ public class PostLanguageService {
     private final PostLanguageRepository postLanguageRepository;
     private final LanguageRepository languageRepository;
 
+    @Transactional
     public void resetPostLanguage(Long postId) {    //게시글 수정에서 쓸 것
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
@@ -32,6 +33,7 @@ public class PostLanguageService {
         postLanguageRepository.deleteAllByPost(post);
     }
 
+    @Transactional
     public List<LanguageDTO> saveLanguages(List<LanguageDTO> languages, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));

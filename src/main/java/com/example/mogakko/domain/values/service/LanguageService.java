@@ -12,12 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class LanguageService {
 
     @Autowired
     LanguageRepository languageRepository;
 
+    @Transactional
     public Long saveLanguage(LanguageDTO languageDTO) {
         Language language = languageRepository.save(languageDTO.toEntity());
         return language.getId();
