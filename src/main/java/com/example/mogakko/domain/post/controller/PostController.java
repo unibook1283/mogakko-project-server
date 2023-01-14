@@ -22,49 +22,15 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-    private final PostLanguageService postLanguageService;
-    private final PostLocationService postLocationService;
-    private final PostOccupationService postOccupationService;
 
     @PostMapping("/posts")
     public PostResponseDTO addPost(@RequestBody PostRequestDTO postRequestDTO) {
-        PostResponseDTO postResponseDTO = postService.savePost(postRequestDTO);
-        Long postId = postResponseDTO.getPostId();
-
-        Type type = postRequestDTO.getType();
-        if (type == Type.PROJECT || type == Type.MOGAKKO) {
-            savePostValues(postRequestDTO, postResponseDTO, postId);
-        }
-
-        return postResponseDTO;
-    }
-
-    private void savePostValues(PostRequestDTO postRequestDTO, PostResponseDTO postResponseDTO, Long postId) {
-        List<LanguageDTO> languages = postLanguageService.saveLanguages(postRequestDTO.getLanguages(), postId);
-        postResponseDTO.setLanguages(languages);
-        List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
-        postResponseDTO.setLocations(locations);
-        List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
-        postResponseDTO.setOccupations(occupations);
-    }
-
-    private void resetPostValues(Long postId) {
-        postLanguageService.resetPostLanguage(postId);
-        postLocationService.resetPostLocation(postId);
-        postOccupationService.resetPostOccupation(postId);
+        return postService.savePost(postRequestDTO);
     }
 
     @PostMapping("/posts/{postId}")
     public PostResponseDTO updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO postRequestDTO) {
-        PostResponseDTO postResponseDTO = postService.updatePost(postId, postRequestDTO);
-
-        Type type = postRequestDTO.getType();
-        if (type == Type.PROJECT || type == Type.MOGAKKO) {
-            resetPostValues(postId);
-            savePostValues(postRequestDTO, postResponseDTO, postId);
-        }
-
-        return postResponseDTO;
+        return postService.updatePost(postId, postRequestDTO);
     }
 
     @GetMapping("/posts/{postId}")

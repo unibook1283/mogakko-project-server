@@ -9,8 +9,14 @@ import com.example.mogakko.domain.post.enums.Type;
 import com.example.mogakko.domain.post.dto.PostRequestDTO;
 import com.example.mogakko.domain.post.dto.PostResponseDTO;
 import com.example.mogakko.domain.post.repository.PostRepository;
+import com.example.mogakko.domain.post.service.values.PostLanguageService;
+import com.example.mogakko.domain.post.service.values.PostLocationService;
+import com.example.mogakko.domain.post.service.values.PostOccupationService;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.repository.UserRepository;
+import com.example.mogakko.domain.values.dto.LanguageDTO;
+import com.example.mogakko.domain.values.dto.LocationDTO;
+import com.example.mogakko.domain.values.dto.OccupationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final GroupUserRepository groupUserRepository;
+    private final PostLanguageService postLanguageService;
+    private final PostLocationService postLocationService;
+    private final PostOccupationService postOccupationService;
 
     @Transactional
     public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {    // languages, locations, occupations는 여기서 말고 values service에서
@@ -38,7 +47,6 @@ public class PostService {
 
         Post post = postRequestDTO.toEntity(user);
         Post savePost = postRepository.save(post);
-        System.out.println("savePost.getDtype() = " + savePost.getDtype());
 
         PostResponseDTO postResponseDTO = new PostResponseDTO(savePost);
 
@@ -55,9 +63,27 @@ public class PostService {
 
             postResponseDTO.setGroupId(saveGroup.getId());
             postResponseDTO.setGroupStatus(saveGroup.getGroupStatus());
+
+            savePostValues(postRequestDTO, postResponseDTO);
         }
 
         return postResponseDTO;
+    }
+
+    private void savePostValues(PostRequestDTO postRequestDTO, PostResponseDTO postResponseDTO) {
+        Long postId = postResponseDTO.getPostId();
+        List<LanguageDTO> languages = postLanguageService.saveLanguages(postRequestDTO.getLanguages(), postId);
+        postResponseDTO.setLanguages(languages);
+        List<LocationDTO> locations = postLocationService.saveLocations(postRequestDTO.getLocations(), postId);
+        postResponseDTO.setLocations(locations);
+        List<OccupationDTO> occupations = postOccupationService.saveOccupations(postRequestDTO.getOccupations(), postId);
+        postResponseDTO.setOccupations(occupations);
+    }
+
+    private void resetPostValues(Long postId) {
+        postLanguageService.resetPostLanguage(postId);
+        postLocationService.resetPostLocation(postId);
+        postOccupationService.resetPostOccupation(postId);
     }
 
     @Transactional
@@ -79,6 +105,11 @@ public class PostService {
 
         Type type = postResponseDTO.getType();
         setGroupInfo(post, postResponseDTO, type);
+
+        if (type == Type.PROJECT || type == Type.MOGAKKO) {
+            resetPostValues(postId);
+            savePostValues(postRequestDTO, postResponseDTO);
+        }
 
         return postResponseDTO;
     }
