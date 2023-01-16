@@ -1,4 +1,4 @@
-package com.example.mogakko.global.exceptionHandler;
+package com.example.mogakko.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

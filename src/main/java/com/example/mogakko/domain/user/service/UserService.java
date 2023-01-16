@@ -5,6 +5,7 @@ import com.example.mogakko.domain.user.domain.UserLanguage;
 import com.example.mogakko.domain.user.domain.UserLocation;
 import com.example.mogakko.domain.user.domain.UserOccupation;
 import com.example.mogakko.domain.user.dto.*;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserLanguageRepository;
 import com.example.mogakko.domain.user.repository.UserLocationRepository;
 import com.example.mogakko.domain.user.repository.UserOccupationRepository;
@@ -15,6 +16,9 @@ import com.example.mogakko.domain.values.domain.Occupation;
 import com.example.mogakko.domain.values.dto.LanguageDTO;
 import com.example.mogakko.domain.values.dto.LocationDTO;
 import com.example.mogakko.domain.values.dto.OccupationDTO;
+import com.example.mogakko.domain.values.exception.LanguageNotFoundException;
+import com.example.mogakko.domain.values.exception.LocationNotFoundException;
+import com.example.mogakko.domain.values.exception.OccupationNotFoundException;
 import com.example.mogakko.domain.values.repository.LanguageRepository;
 import com.example.mogakko.domain.values.repository.LocationRepository;
 import com.example.mogakko.domain.values.repository.OccupationRepository;
@@ -46,13 +50,13 @@ public class UserService {
 
     public ProfileResponseDTO getProfileByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
         return new ProfileResponseDTO(user);
     }
 
     public UserDTO findOne(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
         return new UserDTO(user);
     }
 
@@ -77,7 +81,7 @@ public class UserService {
     @Transactional
     public ProfileResponseDTO saveUserProfile(Long userId, ProfileRequestDTO profileRequestDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         user.setNickname(profileRequestDTO.getNickname());
         user.setOneLineIntroduction(profileRequestDTO.getOneLineIntroduction());
@@ -99,7 +103,7 @@ public class UserService {
         languages.stream()
                 .forEach(languageDTO -> {
                     Language language = languageRepository.findById(languageDTO.getLanguageId())
-                            .orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
+                            .orElseThrow(LanguageNotFoundException::new);
 
                     UserLanguage userLanguage = new UserLanguage();
                     userLanguage.setUser(user);
@@ -117,7 +121,7 @@ public class UserService {
         locations.stream()
                 .forEach(locationDTO -> {
                     Location location = locationRepository.findById(locationDTO.getLocationId())
-                            .orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
+                            .orElseThrow(LocationNotFoundException::new);
 
                     UserLocation userLocation = new UserLocation();
                     userLocation.setUser(user);
@@ -135,7 +139,7 @@ public class UserService {
         occupations.stream()
                 .forEach(occupationDTO -> {
                     Occupation occupation = occupationRepository.findById(occupationDTO.getOccupationId())
-                            .orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
+                            .orElseThrow(OccupationNotFoundException::new);
 
                     UserOccupation userOccupation = new UserOccupation();
                     userOccupation.setUser(user);

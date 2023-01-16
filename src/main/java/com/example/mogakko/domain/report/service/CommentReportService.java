@@ -1,12 +1,14 @@
 package com.example.mogakko.domain.report.service;
 
 import com.example.mogakko.domain.comment.domain.Comment;
+import com.example.mogakko.domain.comment.exception.CommentNotFoundException;
 import com.example.mogakko.domain.comment.repository.CommentRepository;
 import com.example.mogakko.domain.report.domain.CommentReport;
 import com.example.mogakko.domain.report.dto.CommentReportDTO;
 import com.example.mogakko.domain.report.dto.CommentReportRequestDTO;
 import com.example.mogakko.domain.report.repository.CommentReportRepository;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,10 @@ public class CommentReportService {
     @Transactional
     public CommentReportDTO saveCommentReport(CommentReportRequestDTO commentReportRequestDTO) {
         Comment comment = commentRepository.findById(commentReportRequestDTO.getCommentId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+                .orElseThrow(CommentNotFoundException::new);
 
         User user = userRepository.findById(commentReportRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         CommentReport commentReport = new CommentReport();
         commentReport.setComment(comment);
@@ -44,7 +46,7 @@ public class CommentReportService {
 
     public List<CommentReportDTO> findCommentReports(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+                .orElseThrow(CommentNotFoundException::new);
 
         List<CommentReport> commentReports = commentReportRepository.findByComment(comment);
 

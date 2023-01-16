@@ -1,4 +1,4 @@
-package com.example.mogakko.global.exceptionHandler;
+package com.example.mogakko.global.exception;
 
 import com.example.mogakko.domain.group.exception.AlreadyAppliedException;
 import com.example.mogakko.domain.group.exception.IsNotGroupMasterException;
@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.security.auth.login.LoginException;
-
 @Slf4j
 @RestControllerAdvice
 public class ExControllerAdvice {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResult badRequestExceptionHandler(BadRequestException e) {
+        log.error("[exceptionHandler] ex", e);
+        return new ErrorResult(e.getCode(), e.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
@@ -32,28 +37,6 @@ public class ExControllerAdvice {
         log.error("[exceptionHandler] ex", e);
         return new ErrorResult("UNAUTH", e.getMessage());
     }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public ErrorResult isNotGroupMasterExHandler(IsNotGroupMasterException e) {
-        log.error("[exceptionHandler] ex", e);
-        return new ErrorResult("MASTER", e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public ErrorResult alreadyAppliedExHandler(AlreadyAppliedException e) {
-        log.error("[exceptionHandler] ex", e);
-        return new ErrorResult("ALREADY-APPLIED", e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public ErrorResult notRecruitingGroupExHandler(NotRecruitingGroupException e) {
-        log.error("[exceptionHandler] ex", e);
-        return new ErrorResult("NOT-RECRUIT", e.getMessage());
-    }
-
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -2,6 +2,7 @@ package com.example.mogakko.domain.values.service;
 
 import com.example.mogakko.domain.values.domain.Location;
 import com.example.mogakko.domain.values.dto.LocationDTO;
+import com.example.mogakko.domain.values.exception.LocationNotFoundException;
 import com.example.mogakko.domain.values.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class LocationService {
 
     public LocationDTO findOne(Long locationId) {
         Location location = locationRepository.findById(locationId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 locationId"));
+                .orElseThrow(LocationNotFoundException::new);
         return new LocationDTO(location);
     }
 

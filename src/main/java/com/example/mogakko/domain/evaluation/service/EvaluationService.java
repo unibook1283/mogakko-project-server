@@ -4,8 +4,12 @@ import com.example.mogakko.domain.evaluation.domain.Evaluation;
 import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
 import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
+import com.example.mogakko.domain.evaluation.exception.EvaluatedUserNotFoundException;
+import com.example.mogakko.domain.evaluation.exception.EvaluatingUserNotFoundException;
+import com.example.mogakko.domain.evaluation.exception.EvaluationNotFoundException;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,10 +30,10 @@ public class EvaluationService {
     @Transactional
     public EvaluationDTO saveEvaluation(Long evaluatedUserId, AddEvaluationRequestDTO addEvaluationRequestDTO) {
         User evaluated = userRepository.findById(evaluatedUserId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(EvaluatedUserNotFoundException::new);
 
         User evaluating = userRepository.findById(addEvaluationRequestDTO.getEvaluatingUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(EvaluatingUserNotFoundException::new);
 
         Evaluation evaluation = new Evaluation();
         evaluation.setEvaluatedUser(evaluated);
@@ -43,7 +47,7 @@ public class EvaluationService {
 
     public List<EvaluationDTO> findEvaluationsOfUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         List<Evaluation> evaluations = evaluationRepository.findByEvaluatedUser(user);
         return evaluations.stream()
@@ -58,7 +62,7 @@ public class EvaluationService {
 
     public EvaluationDTO updateEvaluation(Long evaluationId, ContentDTO contentDTO) {
         Evaluation evaluation = evaluationRepository.findById(evaluationId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 evaluationId"));
+                .orElseThrow(EvaluationNotFoundException::new);
 
         evaluation.setContent(contentDTO.getContent());
 

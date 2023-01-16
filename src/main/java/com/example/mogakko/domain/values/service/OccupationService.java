@@ -2,6 +2,7 @@ package com.example.mogakko.domain.values.service;
 
 import com.example.mogakko.domain.values.domain.Occupation;
 import com.example.mogakko.domain.values.dto.OccupationDTO;
+import com.example.mogakko.domain.values.exception.OccupationNotFoundException;
 import com.example.mogakko.domain.values.repository.OccupationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class OccupationService {
 
     public OccupationDTO findOne(Long occupationId) {
         Occupation occupation = occupationRepository.findById(occupationId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 occupationId"));
+                .orElseThrow(OccupationNotFoundException::new);
         return new OccupationDTO(occupation);
     }
 

@@ -3,6 +3,7 @@ package com.example.mogakko.domain.user.service;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.domain.UserLanguage;
 import com.example.mogakko.domain.user.domain.UserLocation;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserLocationRepository;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import com.example.mogakko.domain.values.domain.Location;
@@ -26,7 +27,7 @@ public class UserLocationService {
     @Transactional
     public Long prefer(Long userId, Long locationId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         // locationId는 location name으로 찾을것이기 때문에 null이 아님이 보장됨.
         Location location = locationRepository.findById(locationId).get();
@@ -42,7 +43,7 @@ public class UserLocationService {
 
     public List<UserLocation> findLocationsOfUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         return userLocationRepository.findByUser(user);
     }

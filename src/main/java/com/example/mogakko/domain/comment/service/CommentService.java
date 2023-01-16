@@ -4,10 +4,16 @@ import com.example.mogakko.domain.comment.domain.Comment;
 import com.example.mogakko.domain.comment.dto.CommentRequestDTO;
 import com.example.mogakko.domain.comment.dto.CommentResponseDTO;
 import com.example.mogakko.domain.comment.dto.UpdateCommentDTO;
+import com.example.mogakko.domain.comment.exception.CommentNotFoundException;
+import com.example.mogakko.domain.comment.exception.RootCommentHasAnotherRootCommentException;
+import com.example.mogakko.domain.comment.exception.RootCommentNotBelongToPostException;
+import com.example.mogakko.domain.comment.exception.RootCommentNotFoundException;
 import com.example.mogakko.domain.comment.repository.CommentRepository;
 import com.example.mogakko.domain.post.domain.Post;
+import com.example.mogakko.domain.post.exception.PostNotFoundException;
 import com.example.mogakko.domain.post.repository.PostRepository;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,19 +35,19 @@ public class CommentService {
     @Transactional
     public CommentResponseDTO saveComment(CommentRequestDTO commentRequestDTO) {
         Post post = postRepository.findById(commentRequestDTO.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         User user = userRepository.findById(commentRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         Comment rootComment = null;
         if (commentRequestDTO.getRootCommentId() != null) {
             Optional<Comment> optionalComment = commentRepository.findById(commentRequestDTO.getRootCommentId());
-            rootComment = optionalComment.orElseThrow(() -> new IllegalArgumentException("잘못된 rootCommentId"));
+            rootComment = optionalComment.orElseThrow(RootCommentNotFoundException::new);
             if (rootComment.getPost().getId() != post.getId())
-                throw new IllegalArgumentException("rootComment가 해당 post의 댓글이 아닙니다.");
+                throw new RootCommentNotBelongToPostException();
             if (rootComment.getRoot() != null)
-                throw new IllegalArgumentException("rootComment는 다른 rootComment를 갖지 않아야 합니다.");
+                throw new RootCommentHasAnotherRootCommentException();
         }
 
         Comment comment = commentRequestDTO.toEntity(post, user, rootComment);
@@ -53,7 +59,7 @@ public class CommentService {
 
     public List<CommentResponseDTO> findCommentsByPost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         return commentRepository.findByPost(post).stream()
                 .map(comment -> new CommentResponseDTO(comment))
@@ -63,7 +69,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+                .orElseThrow(CommentNotFoundException::new);
         commentRepository.deleteAllByRoot(comment);
         commentRepository.deleteById(commentId);
     }
@@ -71,7 +77,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDTO updateComment(Long commentId, UpdateCommentDTO updateCommentDTO) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 commentId"));
+                .orElseThrow(CommentNotFoundException::new);
 
         comment.setContent(updateCommentDTO.getContent());
         return new CommentResponseDTO(comment);

@@ -7,11 +7,13 @@ import com.example.mogakko.domain.group.dto.ApplicantsDTO;
 import com.example.mogakko.domain.group.dto.GroupAdmissionDTO;
 import com.example.mogakko.domain.group.enums.GroupStatus;
 import com.example.mogakko.domain.group.exception.AlreadyAppliedException;
+import com.example.mogakko.domain.group.exception.GroupNotFoundException;
 import com.example.mogakko.domain.group.exception.NotRecruitingGroupException;
 import com.example.mogakko.domain.group.repository.GroupAdmissionRepository;
 import com.example.mogakko.domain.group.repository.GroupRepository;
 import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,18 +36,18 @@ public class GroupAdmissionService {
     @Transactional
     public GroupAdmissionDTO addGroupAdmission(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+                .orElseThrow(GroupNotFoundException::new);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (group.getGroupStatus() != GroupStatus.RECRUIT) {
-            throw new NotRecruitingGroupException("모집중인 그룹이 아닙니다.");
+            throw new NotRecruitingGroupException();
         }
 
         Optional<GroupAdmission> optionalGroupAdmission = groupAdmissionRepository.findByGroupAndUser(group, user);
         if (optionalGroupAdmission.isPresent()) {
-            throw new AlreadyAppliedException("이미 신청했습니다.");
+            throw new AlreadyAppliedException();
         }
 
         GroupAdmission groupAdmission = new GroupAdmission(group, user);
@@ -57,7 +59,7 @@ public class GroupAdmissionService {
 
     public List<ApplicantsDTO> findApplicantsOfGroup(Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+                .orElseThrow(GroupNotFoundException::new);
 
         List<GroupAdmission> groupAdmissions = groupAdmissionRepository.findByGroup(group);
 
@@ -74,10 +76,10 @@ public class GroupAdmissionService {
     @Transactional
     public void acceptApplicant(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+                .orElseThrow(GroupNotFoundException::new);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         groupAdmissionRepository.deleteByGroupAndUser(group, user);
 
@@ -87,10 +89,10 @@ public class GroupAdmissionService {
     @Transactional
     public void rejectApplicant(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 groupId"));
+                .orElseThrow(GroupNotFoundException::new);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         groupAdmissionRepository.deleteByGroupAndUser(group, user);
     }

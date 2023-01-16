@@ -1,12 +1,14 @@
 package com.example.mogakko.domain.report.service;
 
 import com.example.mogakko.domain.post.domain.Post;
+import com.example.mogakko.domain.post.exception.PostNotFoundException;
 import com.example.mogakko.domain.post.repository.PostRepository;
 import com.example.mogakko.domain.report.domain.PostReport;
 import com.example.mogakko.domain.report.dto.PostReportDTO;
 import com.example.mogakko.domain.report.dto.PostReportRequestDTO;
 import com.example.mogakko.domain.report.repository.PostReportRepository;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,10 @@ public class PostReportService {
     @Transactional
     public PostReportDTO savePostReport(PostReportRequestDTO postReportRequestDTO) {
         Post post = postRepository.findById(postReportRequestDTO.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         User user = userRepository.findById(postReportRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         PostReport postReport = new PostReport();
         postReport.setPost(post);
@@ -44,7 +46,7 @@ public class PostReportService {
 
     public List<PostReportDTO> findPostReports(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         List<PostReport> postReports = postReportRepository.findByPost(post);
 

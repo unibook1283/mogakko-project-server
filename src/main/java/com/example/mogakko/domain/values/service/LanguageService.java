@@ -2,6 +2,7 @@ package com.example.mogakko.domain.values.service;
 
 import com.example.mogakko.domain.values.domain.Language;
 import com.example.mogakko.domain.values.dto.LanguageDTO;
+import com.example.mogakko.domain.values.exception.LanguageNotFoundException;
 import com.example.mogakko.domain.values.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class LanguageService {
 
     public LanguageDTO findOne(Long languageId) {
         Language language = languageRepository.findById(languageId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 languageId"));
+                .orElseThrow(LanguageNotFoundException::new);
         return new LanguageDTO(language);
     }
 

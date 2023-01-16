@@ -8,11 +8,15 @@ import com.example.mogakko.domain.post.domain.*;
 import com.example.mogakko.domain.post.enums.Type;
 import com.example.mogakko.domain.post.dto.PostRequestDTO;
 import com.example.mogakko.domain.post.dto.PostResponseDTO;
+import com.example.mogakko.domain.post.exception.IsNotAuthorOfPostException;
+import com.example.mogakko.domain.post.exception.NotValidPostTypeException;
+import com.example.mogakko.domain.post.exception.PostNotFoundException;
 import com.example.mogakko.domain.post.repository.PostRepository;
 import com.example.mogakko.domain.post.service.values.PostLanguageService;
 import com.example.mogakko.domain.post.service.values.PostLocationService;
 import com.example.mogakko.domain.post.service.values.PostOccupationService;
 import com.example.mogakko.domain.user.domain.User;
+import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import com.example.mogakko.domain.values.dto.LanguageDTO;
 import com.example.mogakko.domain.values.dto.LocationDTO;
@@ -43,7 +47,7 @@ public class PostService {
     public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {    // languages, locations, occupations는 여기서 말고 values service에서
 
         User user = userRepository.findById(postRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         Post post = postRequestDTO.toEntity(user);
         Post savePost = postRepository.save(post);
@@ -89,12 +93,12 @@ public class PostService {
     @Transactional
     public PostResponseDTO updatePost(Long postId, PostRequestDTO postRequestDTO) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         User user = userRepository.findById(postRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
         if (user.getId() != post.getUser().getId()) {
-            throw new IllegalArgumentException("해당 user는 게시글을 수정할 권한이 없습니다.");
+            throw new IsNotAuthorOfPostException();
         }
 
         post.setTitle(postRequestDTO.getTitle());
@@ -138,7 +142,7 @@ public class PostService {
 
     public PostResponseDTO findOne(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 postId"));
+                .orElseThrow(PostNotFoundException::new);
 
         PostResponseDTO postResponseDTO = new PostResponseDTO(post);
 
@@ -158,7 +162,7 @@ public class PostService {
 
     public List<PostResponseDTO> findPostsByType(String type) {
         if (!Arrays.stream(Type.values()).anyMatch(t -> t.name().equals(type))) {
-            throw new IllegalArgumentException("잘못된 postType");
+            throw new NotValidPostTypeException();
         }
         List<Post> posts = postRepository.findByDtype(type);
         return posts.stream()
@@ -173,7 +177,7 @@ public class PostService {
 
     public List<PostResponseDTO> findPostsByUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 userId"));
+                .orElseThrow(UserNotFoundException::new);
 
         List<Post> posts = user.getPosts();
         return posts.stream()
