@@ -34,7 +34,7 @@ public enum BadRequestCode {
     ROOT_COMMENT_NOT_FOUND("COMMENT-002", "존재하지 않는 부모댓글입니다.", RootCommentNotFoundException.class),
     ROOT_COMMENT_NOT_BELONG_TO_POST("COMMENT-003", "해당 게시글에 속하는 부모댓글이 아닙니다.",
             RootCommentNotBelongToPostException.class),
-    ROOT_COMMENT_HAS_ANOTHER_ROOT_COMMENT("COMMENT-04", "부모댓글이 다른 부모댓글을 가집니다.",
+    ROOT_COMMENT_HAS_ANOTHER_ROOT_COMMENT("COMMENT-004", "부모댓글이 다른 부모댓글을 가집니다.",
             RootCommentHasAnotherRootCommentException.class),
 
     EVALUATION_NOT_FOUND("EVALUATION-001", "존재하지 않는 평가입니다.", EvaluationNotFoundException.class),
