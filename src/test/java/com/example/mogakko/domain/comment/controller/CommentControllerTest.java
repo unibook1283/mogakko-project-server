@@ -21,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -189,7 +190,7 @@ class CommentControllerTest {
                         .header("accessToken", token))
                 .andExpect(status().isOk());
 
-        Assertions.assertThat(commentRepository.findById(comment.getId()))
+        assertThat(commentRepository.findById(comment.getId()))
                 .isEmpty();
     }
 
