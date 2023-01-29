@@ -5,6 +5,7 @@ import com.example.mogakko.domain.user.domain.UserLanguage;
 import com.example.mogakko.domain.user.domain.UserLocation;
 import com.example.mogakko.domain.user.domain.UserOccupation;
 import com.example.mogakko.domain.user.dto.*;
+import com.example.mogakko.domain.user.exception.LoginFailedException;
 import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserLanguageRepository;
 import com.example.mogakko.domain.user.repository.UserLocationRepository;
@@ -45,7 +46,14 @@ public class UserService {
     @Transactional
     public UserJoinResponseDTO join(UserJoinRequestDTO userAuthDTO) {
         User user = userRepository.save(userAuthDTO.toEntity());
-        return new UserJoinResponseDTO(user.getId(), user.getUsername(), user.getPassword());
+        return new UserJoinResponseDTO(user.getId(), user.getUsername());
+    }
+
+    @Transactional
+    public User login(String username, String password) {
+        return userRepository.findByUsername(username)
+                .filter(u -> u.getPassword().equals(password))
+                .orElse(null);
     }
 
     public ProfileResponseDTO getProfileByUserId(Long userId) {
@@ -150,7 +158,6 @@ public class UserService {
 
         return new ProfileResponseDTO(user);
     }
-
 
 
 }

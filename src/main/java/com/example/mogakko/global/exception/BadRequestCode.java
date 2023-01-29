@@ -15,6 +15,7 @@ import com.example.mogakko.domain.meeting.exception.MeetingNotFoundException;
 import com.example.mogakko.domain.post.exception.IsNotAuthorOfPostException;
 import com.example.mogakko.domain.post.exception.NotValidPostTypeException;
 import com.example.mogakko.domain.post.exception.PostNotFoundException;
+import com.example.mogakko.domain.user.exception.LoginFailedException;
 import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.values.exception.LanguageNotFoundException;
 import com.example.mogakko.domain.values.exception.LocationNotFoundException;
@@ -53,6 +54,7 @@ public enum BadRequestCode {
     NOT_VALID_POST_TYPE("POST-003", "게시글 타입이 올바르지 않습니다.", NotValidPostTypeException.class),
 
     USER_NOT_FOUND("USER-001", "존재하지 않는 유저입니다.", UserNotFoundException.class),
+    LOGIN_FAILED("USER-002", "로그인에 실패하였습니다.", LoginFailedException.class),
 
     LANGUAGE_NOT_FOUND("LANGUAGE-001", "존재하지 않는 언어입니다.", LanguageNotFoundException.class),
     LOCATION_NOT_FOUND("LOCATION-001", "존재하지 않는 지역입니다.", LocationNotFoundException.class),

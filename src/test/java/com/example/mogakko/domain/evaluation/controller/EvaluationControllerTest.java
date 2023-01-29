@@ -1,18 +1,11 @@
 package com.example.mogakko.domain.evaluation.controller;
 
-import com.example.mogakko.domain.comment.domain.Comment;
-import com.example.mogakko.domain.comment.dto.UpdateCommentDTO;
-import com.example.mogakko.domain.comment.repository.CommentRepository;
 import com.example.mogakko.domain.evaluation.domain.Evaluation;
 import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
 import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
-import com.example.mogakko.domain.evaluation.service.EvaluationService;
-import com.example.mogakko.domain.post.domain.Post;
-import com.example.mogakko.domain.post.repository.PostRepository;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.repository.UserRepository;
-import com.example.mogakko.domain.user.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

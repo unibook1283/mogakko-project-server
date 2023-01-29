@@ -1,16 +1,14 @@
 package com.example.mogakko.domain.user.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserJoinResponseDTO {
-
-    private Long userId;
-    private String username;
-
+public class AuthDto {
+    private Boolean isAuth;
+    private Boolean isAdmin;
+    private int role;
 }

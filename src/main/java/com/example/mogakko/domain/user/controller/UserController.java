@@ -1,47 +1,57 @@
 package com.example.mogakko.domain.user.controller;
 
+import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.dto.*;
-import com.example.mogakko.domain.user.service.JwtService;
+import com.example.mogakko.domain.user.exception.LoginFailedException;
 import com.example.mogakko.domain.user.service.UserService;
-import com.example.mogakko.domain.values.dto.LanguageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final JwtService jwtService;
 
     @PostMapping("/users/register")
-    public JwtTokenDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
-        UserJoinResponseDTO userJoinResponseDTO = userService.join(userAuthDTO);
-
-        String accessToken = jwtService.createToken(userJoinResponseDTO.getUserId());
-        String refreshToken = jwtService.createRefreshToken();
-
-        return new JwtTokenDTO(userJoinResponseDTO.getUserId(), accessToken, refreshToken);
+    public UserJoinResponseDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
+        return userService.join(userAuthDTO);
     }
 
-    @PostMapping("/users/login") // 로그인, 토큰이 필요하지 않는 경로
-    public JwtTokenDTO login(@RequestBody @Valid UserLoginRequestDTO userAuthDTO) {
-        UserDTO dbUser = userService.findByUsername(userAuthDTO.getUsername());
-        if (dbUser == null) throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
+    @PostMapping("/users/login")
+    public void login(@RequestBody @Valid UserLoginRequestDTO userAuthDTO, HttpServletRequest request) {
+        User loginMember = userService.login(userAuthDTO.getUsername(), userAuthDTO.getPassword());
 
-        /**
-         * 리팩토링. service로 빼야할 듯.
-         */
-        if (dbUser.getPassword().equals(userAuthDTO.getPassword())) { // 유효한 사용자일 경우
-            String accessToken = jwtService.createToken(dbUser.getId());    // 사용자 정보로 accessToken 생성
-            String refreshToken = jwtService.createRefreshToken();  // refreshToken 생성
-            return new JwtTokenDTO(dbUser.getId(), accessToken, refreshToken);
-        } else {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        if (loginMember == null) {
+            throw new LoginFailedException();
         }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, loginMember.getId());
+    }
+
+    @PostMapping("/users/logout")
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    }
+
+    @GetMapping("/users/auth")
+    public AuthDto auth(HttpServletRequest request) throws IOException {
+        HttpSession session = request.getSession();
+
+        Boolean isAuth = true;
+        if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
+            isAuth = false;
+        }
+        return new AuthDto(isAuth, false, 0);
     }
 
     @PostMapping("/users/username-redundancy")
