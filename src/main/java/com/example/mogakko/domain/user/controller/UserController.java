@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 

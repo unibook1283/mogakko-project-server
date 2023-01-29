@@ -30,10 +30,10 @@ public class ServletContext implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**") // Interceptor가 적용될 경로
                 .excludePathPatterns(
-                        "/users/login",
-                        "/users/register",
-                        "/users/username-redundancy",
-                        "/users/auth"
+                        "/api/users/login",
+                        "/api/users/register",
+                        "/api/users/username-redundancy",
+                        "/api/users/auth"
                 );
     }
 
