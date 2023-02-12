@@ -40,6 +40,8 @@ public class PostRequestDTO {
 
     private List<OccupationDTO> occupations;
 
+    private Long groupId;
+
     public PostRequestDTO(Post post) {
         this.userId = userId;
         this.title = title;
@@ -50,6 +52,7 @@ public class PostRequestDTO {
         this.languages = languages;
         this.locations = locations;
         this.occupations = occupations;
+        this.groupId = groupId;
     }
 
     public Post toEntity(User user) {

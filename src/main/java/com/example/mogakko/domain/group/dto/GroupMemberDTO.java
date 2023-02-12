@@ -14,8 +14,11 @@ public class GroupMemberDTO {
 
     private String nickname;
 
+    private Boolean isMaster;
+
     public GroupMemberDTO(GroupUser groupUser) {
         this.memberId = groupUser.getUser().getId();
         this.nickname = groupUser.getUser().getNickname();
+        this.isMaster = groupUser.getIsMaster();
     }
 }

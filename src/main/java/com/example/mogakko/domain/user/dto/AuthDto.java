@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthDto {
+    private Long userId;
     private Boolean isAuth;
     private Boolean isAdmin;
     private int role;

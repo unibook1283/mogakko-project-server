@@ -20,8 +20,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users/register")
-    public UserJoinResponseDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO) {
-        return userService.join(userAuthDTO);
+    public UserJoinResponseDTO create(@RequestBody @Valid UserJoinRequestDTO userAuthDTO, HttpServletRequest request) {
+        UserJoinResponseDTO userJoinResponseDTO = userService.join(userAuthDTO);
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, userJoinResponseDTO.getUserId());
+
+        return userJoinResponseDTO;
     }
 
     @PostMapping("/users/login")
@@ -48,11 +53,11 @@ public class UserController {
     public AuthDto auth(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
 
-        Boolean isAuth = true;
         if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
-            isAuth = false;
+            return new AuthDto(null, false, false, 0);
         }
-        return new AuthDto(isAuth, false, 0);
+        Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER);
+        return new AuthDto(userId, true, false, 0);
     }
 
     @PostMapping("/users/username-redundancy")
@@ -81,7 +86,6 @@ public class UserController {
 
     @PostMapping("/users/{userId}")
     public ProfileResponseDTO saveUserProfile(@PathVariable Long userId, @RequestBody ProfileRequestDTO profileRequestDTO) {
-
         return userService.saveUserProfile(userId, profileRequestDTO);
     }
 

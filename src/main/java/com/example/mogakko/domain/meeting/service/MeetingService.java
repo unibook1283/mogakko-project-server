@@ -58,7 +58,10 @@ public class MeetingService {
         return meetings.stream()
                 .map(meeting -> {
                     List<MeetingUser> meetingUsers = meeting.getMeetingUsers();
-                    List<AttendantDTO> attendantDTOS = getAttendanceDTOS(meetingUsers);
+                    List<MeetingUser> attendants = meetingUsers.stream()
+                            .filter(meetingUser -> meetingUser.getAttendance())
+                            .collect(Collectors.toList());
+                    List<AttendantDTO> attendantDTOS = getAttendanceDTOS(attendants);
 
                     return new MeetingDTO(meeting, attendantDTOS);
                 })

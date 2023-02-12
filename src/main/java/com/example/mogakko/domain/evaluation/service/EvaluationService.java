@@ -4,10 +4,13 @@ import com.example.mogakko.domain.evaluation.domain.Evaluation;
 import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
 import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
-import com.example.mogakko.domain.evaluation.exception.EvaluatedUserNotFoundException;
-import com.example.mogakko.domain.evaluation.exception.EvaluatingUserNotFoundException;
-import com.example.mogakko.domain.evaluation.exception.EvaluationNotFoundException;
+import com.example.mogakko.domain.evaluation.exception.*;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
+import com.example.mogakko.domain.group.domain.Group;
+import com.example.mogakko.domain.group.domain.GroupUser;
+import com.example.mogakko.domain.group.exception.GroupNotFoundException;
+import com.example.mogakko.domain.group.repository.GroupRepository;
+import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.exception.UserNotFoundException;
 import com.example.mogakko.domain.user.repository.UserRepository;
@@ -25,19 +28,35 @@ import java.util.stream.Collectors;
 public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
+    private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final GroupUserRepository groupUserRepository;
 
     @Transactional
-    public EvaluationDTO saveEvaluation(Long evaluatedUserId, AddEvaluationRequestDTO addEvaluationRequestDTO) {
-        User evaluated = userRepository.findById(evaluatedUserId)
+    public EvaluationDTO saveEvaluation(Long groupId, Long evaluatedUserId, AddEvaluationRequestDTO addEvaluationRequestDTO) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupNotFoundException::new);
+
+        User evaluatedUser = userRepository.findById(evaluatedUserId)
                 .orElseThrow(EvaluatedUserNotFoundException::new);
 
-        User evaluating = userRepository.findById(addEvaluationRequestDTO.getEvaluatingUserId())
+        User evaluatingUser = userRepository.findById(addEvaluationRequestDTO.getEvaluatingUserId())
                 .orElseThrow(EvaluatingUserNotFoundException::new);
 
+        groupUserRepository.findByGroupAndUser(group, evaluatedUser)
+                .orElseThrow(EvaluatedUserNotBelongToGroupException::new);
+
+        groupUserRepository.findByGroupAndUser(group, evaluatingUser)
+                .orElseThrow(EvaluatingUserNotBelongToGroupException::new);
+
+        if (evaluationRepository.findByGroupAndEvaluatedUserAndEvaluatingUser(group, evaluatedUser, evaluatingUser).isPresent()) {
+            throw new AlreadyEvaluatedException();
+        }
+
         Evaluation evaluation = new Evaluation();
-        evaluation.setEvaluatedUser(evaluated);
-        evaluation.setEvaluatingUser(evaluating);
+        evaluation.setGroup(group);
+        evaluation.setEvaluatedUser(evaluatedUser);
+        evaluation.setEvaluatingUser(evaluatingUser);
         evaluation.setContent(addEvaluationRequestDTO.getContent());
 
         Evaluation saveEvaluation = evaluationRepository.save(evaluation);

@@ -2,6 +2,7 @@ package com.example.mogakko.domain.group.domain;
 
 import com.example.mogakko.domain.group.enums.GroupStatus;
 import com.example.mogakko.domain.post.domain.Post;
+import com.example.mogakko.domain.post.domain.Study;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +35,17 @@ public class Group {
     @OneToOne(mappedBy = "group")
     private Post post;
 
+    @OneToMany(mappedBy = "s_group")
+    private List<Study> studyPosts = new ArrayList<Study>();
+
     public void addGroupUser(GroupUser groupUser) {
         groupUsers.add(groupUser);
         groupUser.setGroup(this);
+    }
+
+    public void addStudyPost(Study study) {
+        studyPosts.add(study);
+        study.setS_group(this);
     }
 
     //==생성 메서드==//

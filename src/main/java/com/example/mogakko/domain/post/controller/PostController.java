@@ -49,4 +49,9 @@ public class PostController {
         return postService.findPostsByType(postType);
     }
 
+    @GetMapping("/groups/{groupId}/posts/type/study")
+    public List<PostResponseDTO> getStudyPostsOfGroup(@PathVariable Long groupId) {
+        return postService.findStudyPostsByGroupId(groupId);
+    }
+
 }

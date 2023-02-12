@@ -7,6 +7,7 @@ import com.example.mogakko.domain.comment.repository.CommentRepository;
 import com.example.mogakko.domain.post.domain.Post;
 import com.example.mogakko.domain.post.domain.Project;
 import com.example.mogakko.domain.post.repository.PostRepository;
+import com.example.mogakko.domain.user.controller.SessionConst;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,11 +38,10 @@ class CommentControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    protected MockHttpSession session;
 
     @Autowired
-    private JwtService jwtService;
+    ObjectMapper objectMapper;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -49,21 +52,17 @@ class CommentControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private String token;
     private User user;
     private Post post;
     private Comment comment;
 
-    @BeforeAll
-    void getToken() {
-        token = jwtService.createToken(1L);
-    }
-
     @BeforeEach
-    void setupDatabase() {
+    void setupDatabase() throws Exception {
         user = userRepository.save(createUser());
         post = postRepository.save(createPost());
         comment = commentRepository.save(createComment(post, user, null, "부모댓글1"));
+        session = new MockHttpSession();
+        session.setAttribute(SessionConst.LOGIN_USER, user.getId());
     }
 
     private User createUser() {
@@ -110,8 +109,8 @@ class CommentControllerTest {
     void addCommentHttpRequest() throws Exception {
         CommentRequestDTO commentRequestDTO = createCommentRequestDTO(null);
 
-        mockMvc.perform(post("/comments")
-                        .header("accessToken", token)
+        mockMvc.perform(post("/api/comments")
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDTO)))
                 .andExpect(status().isOk())
@@ -127,8 +126,8 @@ class CommentControllerTest {
     void addCommentWithANonValidRootCommentHttpRequest() throws Exception {
         CommentRequestDTO commentRequestDTO = createCommentRequestDTO(-1L);
 
-        mockMvc.perform(post("/comments")
-                        .header("accessToken", token)
+        mockMvc.perform(post("/api/comments")
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDTO)))
                 .andExpect(status().is4xxClientError())
@@ -144,8 +143,8 @@ class CommentControllerTest {
 
         CommentRequestDTO commentRequestDTO = createCommentRequestDTO(anotherComment.getId());
 
-        mockMvc.perform(post("/comments")
-                        .header("accessToken", token)
+        mockMvc.perform(post("/api/comments")
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDTO)))
                 .andExpect(status().is4xxClientError())
@@ -160,8 +159,8 @@ class CommentControllerTest {
 
         CommentRequestDTO commentRequestDTO = createCommentRequestDTO(hasAnotherRootComment.getId());
 
-        mockMvc.perform(post("/comments")
-                        .header("accessToken", token)
+        mockMvc.perform(post("/api/comments")
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDTO)))
                 .andExpect(status().is4xxClientError())
@@ -172,8 +171,8 @@ class CommentControllerTest {
     @Test
     @DisplayName("게시글의 모든 댓글을 조회한다.")
     void getCommentsOfPostHttpRequest() throws Exception {
-        mockMvc.perform(get("/posts/{postId}/comments", post.getId())
-                        .header("accessToken", token))
+        mockMvc.perform(get("/api/posts/{postId}/comments", post.getId())
+                        .session(session))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(1))
@@ -184,8 +183,8 @@ class CommentControllerTest {
     @Test
     @DisplayName("댓글 삭제")
     void deleteCommentHttpRequest() throws Exception {
-        mockMvc.perform(delete("/comments/{commentId}", comment.getId())
-                        .header("accessToken", token))
+        mockMvc.perform(delete("/api/comments/{commentId}", comment.getId())
+                        .session(session))
                 .andExpect(status().isOk());
 
         assertThat(commentRepository.findById(comment.getId()))
@@ -198,9 +197,9 @@ class CommentControllerTest {
         UpdateCommentDTO updateCommentDTO = new UpdateCommentDTO();
         updateCommentDTO.setContent("수정된 내용");
 
-        mockMvc.perform(patch("/comments/{commentId}", comment.getId())
-                .header("accessToken", token)
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/api/comments/{commentId}", comment.getId())
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateCommentDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

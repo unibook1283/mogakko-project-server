@@ -17,9 +17,9 @@ public class EvaluationController {
 
     private final EvaluationService evaluationService;
 
-    @PostMapping("/users/{userId}/evaluations")
-    public EvaluationDTO addEvaluation(@PathVariable Long userId, @RequestBody AddEvaluationRequestDTO addEvaluationRequestDTO) {
-        return evaluationService.saveEvaluation(userId, addEvaluationRequestDTO);
+    @PostMapping("/groups/{groupId}/users/{userId}/evaluations")
+    public EvaluationDTO addEvaluation(@PathVariable Long groupId, @PathVariable Long userId, @RequestBody AddEvaluationRequestDTO addEvaluationRequestDTO) {
+        return evaluationService.saveEvaluation(groupId, userId, addEvaluationRequestDTO);
     }
 
     @GetMapping("/users/{userId}/evaluations")

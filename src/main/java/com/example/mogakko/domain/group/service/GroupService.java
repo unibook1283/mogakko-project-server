@@ -106,4 +106,10 @@ public class GroupService {
 
         return new GroupStatusResponseDTO(group);
     }
+
+    public PostIdDTO getPostIdByGroupId(Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupNotFoundException::new);
+        return new PostIdDTO(group.getPost().getId());
+    }
 }

@@ -4,9 +4,7 @@ import com.example.mogakko.domain.comment.exception.CommentNotFoundException;
 import com.example.mogakko.domain.comment.exception.RootCommentHasAnotherRootCommentException;
 import com.example.mogakko.domain.comment.exception.RootCommentNotBelongToPostException;
 import com.example.mogakko.domain.comment.exception.RootCommentNotFoundException;
-import com.example.mogakko.domain.evaluation.exception.EvaluatedUserNotFoundException;
-import com.example.mogakko.domain.evaluation.exception.EvaluatingUserNotFoundException;
-import com.example.mogakko.domain.evaluation.exception.EvaluationNotFoundException;
+import com.example.mogakko.domain.evaluation.exception.*;
 import com.example.mogakko.domain.group.exception.AlreadyAppliedException;
 import com.example.mogakko.domain.group.exception.GroupNotFoundException;
 import com.example.mogakko.domain.group.exception.IsNotGroupMasterException;
@@ -41,6 +39,9 @@ public enum BadRequestCode {
     EVALUATION_NOT_FOUND("EVALUATION-001", "존재하지 않는 평가입니다.", EvaluationNotFoundException.class),
     EVALUATED_USER_NOT_FOUND("EVALUATION-002", "평가받는 유저가 존재하지 않습니다.", EvaluatedUserNotFoundException.class),
     EVALUATING_USER_NOT_FOUND("EVALUATION-003", "평가하는 유저가 존재하지 않습니다.", EvaluatingUserNotFoundException.class),
+    EVALUATED_USER_NOT_BELONG_TO_GROUP("EVALUATION-004", "평가받는 유저가 해당 그룹에 속하지 않습니다.", EvaluatedUserNotBelongToGroupException.class),
+    EVALUATING_USER_NOT_BELONG_TO_GROUP("EVALUATION-005", "평가하는 유저가 해당 그룹에 속하지 않습니다.", EvaluatingUserNotBelongToGroupException.class),
+    ALREADY_EVALUATED("EVALUATION-006", "이미 평가하였습니다.", AlreadyEvaluatedException.class),
 
     GROUP_NOT_FOUND("GROUP-001", "존재하지 않는 그룹입니다.", GroupNotFoundException.class),
     ALREADY_APPLIED("GROUP-002", "이미 가입신청한 그룹입니다.", AlreadyAppliedException.class),

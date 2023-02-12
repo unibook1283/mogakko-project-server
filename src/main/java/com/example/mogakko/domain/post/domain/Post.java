@@ -40,6 +40,7 @@ public class Post extends BaseTimeEntity {
 
     private String title;
 
+    @Column(length = 1000)
     private String content;
 
     @OneToMany(mappedBy = "post")

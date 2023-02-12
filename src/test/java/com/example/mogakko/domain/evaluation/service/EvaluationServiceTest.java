@@ -6,6 +6,11 @@ import com.example.mogakko.domain.evaluation.dto.AddEvaluationRequestDTO;
 import com.example.mogakko.domain.evaluation.dto.ContentDTO;
 import com.example.mogakko.domain.evaluation.dto.EvaluationDTO;
 import com.example.mogakko.domain.evaluation.repository.EvaluationRepository;
+import com.example.mogakko.domain.group.domain.Group;
+import com.example.mogakko.domain.group.domain.GroupUser;
+import com.example.mogakko.domain.group.enums.GroupStatus;
+import com.example.mogakko.domain.group.repository.GroupRepository;
+import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.user.domain.User;
 import com.example.mogakko.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,14 +41,30 @@ class EvaluationServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private GroupUserRepository groupUserRepository;
+
     private User user1, user2;
     private Evaluation evaluation;
+    private Group group;
 
     @BeforeEach
     void setupDatabase() {
         user1 = userRepository.save(createUser("qwer1234", "qwer1234!", "담비", "안녕하세요.", "01012341234", "qwer.github.com", "img1"));
         user2 = userRepository.save(createUser("asdf1234", "asdf1234!", "단비", "안녕하세요.", "01012341235", "asdf.github.com", "img2"));
         evaluation = evaluationRepository.save(createEvaluation(user1, user2, "user2가 user1을 평가"));
+        group = groupRepository.save(createGroup(user1, user2));
+        groupUserRepository.save(GroupUser.createGroupUser(group, user1));
+        groupUserRepository.save(GroupUser.createGroupUser(group, user2));
+    }
+
+    private Group createGroup(User user1, User user2) {
+        Group group1 = new Group();
+        group1.setGroupStatus(GroupStatus.END_GROUP);
+        return group1;
     }
 
     private User createUser(String username, String password, String nickname, String oneLineIntroduction, String phoneNumber, String githubAddress, String picture) {
@@ -75,7 +96,7 @@ class EvaluationServiceTest {
         addEvaluationRequestDTO.setEvaluatingUserId(user1.getId());
         addEvaluationRequestDTO.setContent("user1이 user2를 평가");
 
-        EvaluationDTO evaluationDTO = evaluationService.saveEvaluation(user2.getId(), addEvaluationRequestDTO);
+        EvaluationDTO evaluationDTO = evaluationService.saveEvaluation(group.getId(), user2.getId(), addEvaluationRequestDTO);
 
         Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluationDTO.getEvaluationId());
         assertThat(optionalEvaluation).as("저장한 평가가 존재해야한다.")

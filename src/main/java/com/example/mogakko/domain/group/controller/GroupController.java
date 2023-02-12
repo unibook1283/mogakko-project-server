@@ -38,4 +38,9 @@ public class GroupController {
     public GroupStatusResponseDTO setGroupStatus(@PathVariable Long groupId, @RequestBody GroupStatusRequestDTO groupStatusRequestDTO) {
         return groupService.setGroupStatus(groupId, groupStatusRequestDTO.getGroupStatus());
     }
+
+    @GetMapping("/groups/{groupId}")
+    public PostIdDTO getPostIdOfGroup(@PathVariable Long groupId) {
+        return groupService.getPostIdByGroupId(groupId);
+    }
 }

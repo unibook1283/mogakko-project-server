@@ -2,6 +2,7 @@ package com.example.mogakko.domain.post.service;
 
 import com.example.mogakko.domain.group.domain.Group;
 import com.example.mogakko.domain.group.domain.GroupUser;
+import com.example.mogakko.domain.group.exception.GroupNotFoundException;
 import com.example.mogakko.domain.group.repository.GroupRepository;
 import com.example.mogakko.domain.group.repository.GroupUserRepository;
 import com.example.mogakko.domain.post.domain.*;
@@ -69,6 +70,14 @@ public class PostService {
             postResponseDTO.setGroupStatus(saveGroup.getGroupStatus());
 
             savePostValues(postRequestDTO, postResponseDTO);
+        }
+        else if (type == Type.STUDY) {
+            Group group = groupRepository.findById(postRequestDTO.getGroupId())
+                    .orElseThrow(GroupNotFoundException::new);
+
+            group.addStudyPost((Study)savePost);
+            postResponseDTO.setGroupId(group.getId());
+            postResponseDTO.setGroupStatus(group.getGroupStatus());
         }
 
         return postResponseDTO;
@@ -190,4 +199,15 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostResponseDTO> findStudyPostsByGroupId(Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupNotFoundException::new);
+
+        return group.getStudyPosts().stream()
+                .map(studyPost -> {
+                    PostResponseDTO postResponseDTO = new PostResponseDTO((Post) studyPost);
+                    return postResponseDTO;
+                })
+                .collect(Collectors.toList());
+    }
 }

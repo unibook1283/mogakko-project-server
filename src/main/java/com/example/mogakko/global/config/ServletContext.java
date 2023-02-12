@@ -19,10 +19,10 @@ public class ServletContext implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) { // client에서 header추출이 가능하도록 하기 위해 등록
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("http://localhost:3000", "https://mogakko-project.github.io/client/")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("accessToken");
+                .allowCredentials(true);
     }
 
     @Override
@@ -33,7 +33,14 @@ public class ServletContext implements WebMvcConfigurer {
                         "/api/users/login",
                         "/api/users/register",
                         "/api/users/username-redundancy",
-                        "/api/users/auth"
+                        "/api/users/auth",
+                        "/error",
+                        "/api/posts/type/{postType}",
+                        "/api/posts/{postId}",
+                        "/api/languages",
+                        "/api/locations",
+                        "/api/occupations",
+                        "/api/posts/{postId}/comments"
                 );
     }
 
