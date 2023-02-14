@@ -126,8 +126,7 @@ class GroupServiceTest {
         userIdDTO.setUserId(user1.getId());
         groupService.deleteGroupMember(group.getId(), user2.getId(), userIdDTO);
 
-        Group findGroup = groupRepository.findById(group.getId()).get();
-        List<GroupUser> groupUsers = groupUserRepository.findByGroup(findGroup);
+        List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
         assertThat(groupUsers).as("member 한 명이 퇴출되어, 그룹에는 1명만 남아있다.")
                 .hasSize(1);
     }
