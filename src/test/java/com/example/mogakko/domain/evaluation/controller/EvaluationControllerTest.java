@@ -55,7 +55,6 @@ class EvaluationControllerTest {
     @Autowired
     private GroupUserRepository groupUserRepository;
 
-    private String token;
     private User user1, user2;  // 1: 평가받는 유저, 2: 평가하는 유저
     private Evaluation evaluation;
     private Group group;
