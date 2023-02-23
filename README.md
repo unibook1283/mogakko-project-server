@@ -1,5 +1,5 @@
 # 모각코/프로젝트를 구하고 관리할 수 있는 웹서비스(server)
-
+- client 링크 : https://github.com/unibook1283/mogakko-project-client
 ### 일정
 - 2022-11-01 ~ 2022-11-07 : 프로젝트 주제 선정
 - 2022-11-07 ~ 2022-11-13 : 기획
@@ -16,24 +16,25 @@
 - 서버 배포 : aws ec2
 
 ### 요구사항 분석
-https://www.notion.so/11-13-6204653820c54bde9a2a7c2430584fb5
+https://broadleaf-jasper-ea3.notion.site/11-13-403396dddd1345ec9f819ee6d28231fc
 
 ### db 설계
 ![mogakko erd](https://user-images.githubusercontent.com/81623224/218642610-0156a06a-409c-4bbb-bfc5-df8c811bb643.png)
-- many-to-many 관계는 many-to-one, one-to-many 관계로 풀어내었습니다.
-- 게시글(post)은 여러 종류가 있기에 상속 관계 매핑을 사용하였습니다. 조인을 하지 않는 단일 테이블 전략을 사용하여 조회 속도를 빠르게 하였습니다.
+- many-to-many 관계는 many-to-one, one-to-many 관계로 풀어냈습니다.
+- 게시글(post)은 여러 종류가 있기에 상속 관계 매핑을 사용했습니다. 조인을 하지 않는 단일 테이블 전략을 사용하여 조회 속도를 빠르게 했습니다.
 
 ### API 설계
-https://www.notion.so/API-70fe64361c8149b983b2d36e35329f9c
-- RESTful한 api를 작성하려 노력하였습니다.
+https://broadleaf-jasper-ea3.notion.site/API-0088252a860d4aa4b9eef70e026fd78d
+- RESTful한 api를 작성하려 노력했습니다.
 - 다음 사이트를 통해 rest api를 작성하는데 어떤 규칙을 지켜야 하는지 파악했습니다.
   - https://restfulapi.net/resource-naming/
-- gmail의 API들을 보며 api를 hierarchial하게 작성한다는 것이 무엇인지 이해할 수 있었습니다.
+- gmail의 API들을 보며 api를 hierarchial하게 작성한다는 것이 어떤 것인지 실제 예를 통해 이해할 수 있었습니다.
   - https://developers.google.com/gmail/api/reference/rest
   - http://blog.storyg.co/rest-api-response-body-best-pratics
+- 프론트엔드 팀원들이 api를 이해하기 쉽도록 json request, response 예시를 작성했습니다.
 
 ### 화면
-- 유저의 로그인 여부에 따라 접근할 수 있는 페이지를 제한하였습니다.
+- 유저의 로그인 여부에 따라 접근할 수 있는 페이지를 제한했습니다.
 #### 회원가입
 ![RegisterPage](https://user-images.githubusercontent.com/81623224/218650637-7f451f6e-2d30-468d-abd2-d7de1562ebca.png)
 
@@ -125,7 +126,7 @@ public class PostController {
 }
 ```
   - 우리가 원하는 것은 data를 저장하는 4개의 service 중 하나에서 exception이 발생한다면, 모든 작업을 rollback하는 것이다.
-  - 이 4개의 service를 하나의 Transactional로 처리하기 위해 이 4가지 작업을 하나의 service에서 처리하고, controller에서는 단순히 그 service를 호출하도록 하였다.
+  - 이 4개의 service를 하나의 Transactional로 처리하기 위해 이 4가지 작업을 하나의 service에서 처리하고, controller에서는 단순히 그 service를 호출하도록 했다.
 
 2. foreign key constraint fails
    - comment 삭제에서, 해당 comment를 root로 갖는 모든 comment들을 삭제하도록 구현했는데 foreign key constraint fails가 뜸.
@@ -167,7 +168,7 @@ class GroupServiceTest {
   }
 }
 ```
-- db에서 groupUsers를 조회하여 assert하였다.
+- db에서 groupUsers를 조회하여 assert했습니다.
 
 ### 예외 처리
 - 발생할 수 있는 여러 예외 상황에 대해 상세하게 처리하기 위해 노력했습니다.
@@ -187,7 +188,7 @@ public enum BadRequestCode {
     EVALUATING_USER_NOT_FOUND("EVALUATION-003", "평가하는 유저가 존재하지 않습니다.", EvaluatingUserNotFoundException.class),
     EVALUATED_USER_NOT_BELONG_TO_GROUP("EVALUATION-004", "평가받는 유저가 해당 그룹에 속하지 않습니다.", EvaluatedUserNotBelongToGroupException.class),
     EVALUATING_USER_NOT_BELONG_TO_GROUP("EVALUATION-005", "평가하는 유저가 해당 그룹에 속하지 않습니다.", EvaluatingUserNotBelongToGroupException.class),
-    ALREADY_EVALUATED("EVALUATION-006", "이미 평가하였습니다.", AlreadyEvaluatedException.class),
+    ALREADY_EVALUATED("EVALUATION-006", "이미 평가했습니다.", AlreadyEvaluatedException.class),
 
     GROUP_NOT_FOUND("GROUP-001", "존재하지 않는 그룹입니다.", GroupNotFoundException.class),
     ALREADY_APPLIED("GROUP-002", "이미 가입신청한 그룹입니다.", AlreadyAppliedException.class),
@@ -216,7 +217,7 @@ public enum BadRequestCode {
 
 ### 성능을 신경 쓴 부분
 - jpa
-  - service class에 Transactional을 읽기 전용으로 선언하고, 엔티티의 등록, 수정, 삭제가 필요한 메서드에만 @Transactional을 선언하여 읽기 작업만 하는 메서드에 대해서는 스냅샷 저장, 변경감지 등의 작업을 수행하지 않도록 하였다.
+  - service class에 Transactional을 읽기 전용으로 선언하고, 엔티티의 등록, 수정, 삭제가 필요한 메서드에만 @Transactional을 선언하여 읽기 작업만 하는 메서드에 대해서는 스냅샷 저장, 변경감지 등의 작업을 수행하지 않도록 했습니다.
   ```java
   @Transactional(readOnly = true)
   public class GroupService {
@@ -239,6 +240,10 @@ public enum BadRequestCode {
   }
   ```
   - FetchType.LAZY
+    - 즉시 로딩은 불필요한 테이블까지 조인하여 성능을 떨어뜨릴 수 있으므로, 우선 모든 매핑을 FetchType.LAZY로 했습니다.
+    - 그리고 개발을 마친 후, 필요한 부분은 즉시 로딩으로 바꾸려 했으나, 즉시 로딩이 필요한 부분은 없다고 판단했습니다.
 
 ### 테스트
-- controller와 service에 대해 단위 테스트를 작성하였습니다.
+- controller와 service에 대해 단위 테스트를 작성했습니다.
+- 단위 테스트와 mock의 이해를 위해 강의를 들었습니다.
+- https://www.udemy.com/course/spring-boot-unit-testing/
